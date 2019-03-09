@@ -1,4 +1,5 @@
 *
+!bootstrap.sh
 !playbooks/
 !docker/build/*
 !docker/devstack_common_ansible_overrides.yml
