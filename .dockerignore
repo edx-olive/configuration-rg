@@ -2,6 +2,7 @@
 !bootstrap.sh
 !playbooks/
 !vault/
+!inventory/
 !docker/build/*
 !docker/devstack_common_ansible_overrides.yml
 !docker/build/*/*.yml
