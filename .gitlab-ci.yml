@@ -19,6 +19,7 @@ build-base-image:
         - ficus-rg
         - ginkgo-rg
         - hawthorn-rg
+        - ironwood-rg
 
 build-version-image:
     extends: build-base-image
