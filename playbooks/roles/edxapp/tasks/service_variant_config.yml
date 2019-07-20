@@ -197,6 +197,50 @@
     - gather_static_assets
     - assets
 
+- name: Create empty staticfiles directory
+  file:
+    path: "{{ edxapp_staticfile_dir }}-new"
+    state: directory
+    owner: "{{ edxapp_user }}"
+    group: "{{ common_web_group }}"
+    mode:  "0755"
+  when: not devstack and not EDXAPP_REMOVE_STATICFILES_DIR_DURING_UPDATE
+  tags:
+    - gather_static_assets
+    - assets
+
+- name: Restore webpack-stats.json from previous version to protect from 500 on LMS
+  copy:
+    src: "{{ edxapp_staticfile_dir }}/webpack-stats.json"
+    dest: "{{ edxapp_staticfile_dir }}-new/webpack-stats.json"
+    remote_src: yes
+    owner: "{{ edxapp_user }}"
+    group: "{{ common_web_group }}"
+    mode:  "0755"
+  when: not devstack and not EDXAPP_REMOVE_STATICFILES_DIR_DURING_UPDATE
+  tags:
+    - gather_static_assets
+    - assets
+
+- name: Remove directory with previous version of staticfiles
+  file:
+    path: "{{ edxapp_staticfile_dir }}-prev"
+    state: absent
+  when: not devstack and not EDXAPP_REMOVE_STATICFILES_DIR_DURING_UPDATE
+  tags:
+    - gather_static_assets
+    - assets
+
+# custom rule was applied to nginx configuration to serve /static from both directories
+- name: Rotate staticfiles version - current to previuos
+  shell: |
+    mv "{{ edxapp_staticfile_dir }}" "{{ edxapp_staticfile_dir }}-prev" &&
+    mv "{{ edxapp_staticfile_dir }}-new" "{{ edxapp_staticfile_dir }}"
+  when: not devstack and not EDXAPP_REMOVE_STATICFILES_DIR_DURING_UPDATE
+  tags:
+    - gather_static_assets
+    - assets
+
 # Gather assets using paver if possible
 - name: "gather static assets with paver"
   command: "{{ COMMON_BIN_DIR }}/edxapp-update-assets"
