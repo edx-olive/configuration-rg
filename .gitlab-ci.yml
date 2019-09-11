@@ -10,10 +10,11 @@ before_script:
 build-base-image:
     stage: build
     variables:
-        BASE_IMAGE: registry-gitlab.raccoongang.com/devops/configuration:$CI_COMMIT_REF_SLUG-develop
+        BASE_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG-develop
     script:
         - docker build -t $BASE_IMAGE .
         - docker push $BASE_IMAGE
+        - echo image built - $BASE_IMAGE
     only:
         - master
         - ficus-rg
@@ -24,6 +25,6 @@ build-base-image:
 build-version-image:
     extends: build-base-image
     variables:
-        BASE_IMAGE: registry-gitlab.raccoongang.com/devops/configuration:$CI_COMMIT_REF_SLUG
+        BASE_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
     only:
         - tags
