@@ -77,9 +77,9 @@
   slack:
     token: "{{ slack_notification_token }}"
     channel: "{{ item }}"
-    msg: "AWX: Start updating {{ project_name }} {{ env }}{{ '. Started by: '~awx_user_name if awx_user_name is defined else '' }}{{ ' https://awx.raccoongang.com/#/workflows/'~awx_workflow_job_id if awx_workflow_job_id is defined else '' }}"
+    msg: "AWX: Start updating {{ project_name }} {{ project_environment }}{{ '. Started by: '~awx_user_name if awx_user_name is defined else '' }}{{ ' https://awx.raccoongang.com/#/workflows/'~awx_workflow_job_id if awx_workflow_job_id is defined else '' }}"
     icon_url: "https://awx.raccoongang.com/favicon.ico"
     username: "AWX"
-  with_items: "{{ slack_notification_channels[env] }}"
-  when: slack_notification_channels is defined and slack_notification_channels[env] is defined and slack_notification_channels[env] != ''
+  with_items: "{{ slack_notification_channels[project_environment] }}"
+  when: slack_notification_channels is defined and slack_notification_channels[project_environment] is defined and slack_notification_channels[project_environment] != ''
   delegate_to: localhost

@@ -84,9 +84,9 @@
   slack:
     token: "{{ slack_notification_token }}"
     channel: "{{ item }}"
-    msg: "AWX: {{ project_name }} {{ env }} updated. {{ EDXAPP_LMS_BASE }}"
+    msg: "AWX: {{ project_name }} {{ project_environment }} updated. {{ EDXAPP_LMS_BASE }}"
     icon_url: "https://awx.raccoongang.com/favicon.ico"
     username: "AWX"
-  with_items: "{{ slack_notification_channels[env] }}"
-  when: slack_notification_channels is defined and slack_notification_channels[env] is defined and slack_notification_channels[env] != ''
+  with_items: "{{ slack_notification_channels[project_environment] }}"
+  when: slack_notification_channels is defined and slack_notification_channels[project_environment] is defined and slack_notification_channels[project_environment] != ''
   delegate_to: localhost
