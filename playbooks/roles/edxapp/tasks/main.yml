@@ -96,12 +96,9 @@
 
 - name: install system packages on which LMS and CMS rely
   apt:
-    name: "{{ item }}"
+    name: "{{ query('flattened', ['{{ edxapp_debian_pkgs_default }}', '{{ edxapp_debian_pkgs_extra }}']) }}"
     state: present
     update_cache: yes
-  with_flattened:
-    - "{{ edxapp_debian_pkgs_default }}"
-    - "{{ edxapp_debian_pkgs_extra }}"
   tags:
     - install
     - install:base

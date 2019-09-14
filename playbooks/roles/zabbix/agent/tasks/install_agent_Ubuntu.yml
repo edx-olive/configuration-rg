@@ -18,7 +18,5 @@
 
 - name: Install zabbix-agent packages
   apt:
-    name: "{{ item }}"
+    name: "{{ zabbix_requirements[ansible_distribution] }}"
     update_cache: yes
-  with_items:
-    "{{ zabbix_requirements[ansible_distribution] }}"

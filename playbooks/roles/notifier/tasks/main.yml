@@ -18,10 +18,9 @@
 #
 - name: Install notifier specific system packages
   apt:
-    name: "{{ item }}"
+    name: "{{ notifier_debian_pkgs }}"
     state: present
     update_cache: yes
-  with_items: "{{ notifier_debian_pkgs }}"
   tags:
     - "install"
     - "install:system-requirements"
@@ -39,7 +38,7 @@
     path: "/usr/share/ca-certificates/incommon"
     state: directory
     mode: "2775"
-  when: incommon_present|failed
+  when: incommon_present is failed
   tags:
     - "install"
     - "install:base"
@@ -48,7 +47,7 @@
   get_url:
     url: "https://www.incommon.org/cert/repository/InCommonServerCA.txt"
     dest: "/usr/share/ca-certificates/incommon/InCommonServerCA.crt"
-  when: incommon_present|failed
+  when: incommon_present is failed
   tags:
     - "install"
     - "install:base"

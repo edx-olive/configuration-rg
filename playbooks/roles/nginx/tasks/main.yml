@@ -42,10 +42,9 @@
 
 - name: Install needed packages
   apt:
-    name: "{{ item }}"
+    name: "{{ nginx_debian_pkgs }}"
     state: present
   notify: restart nginx
-  with_items: "{{ nginx_debian_pkgs }}"
   tags:
     - install
     - install:system-requirements
@@ -150,6 +149,7 @@
     owner: root
     group: "{{ common_web_user }}"
     mode: "0640"
+  when: item != ''
   with_items: "{{ nginx_sites }}"
   notify: reload nginx
   tags:
@@ -163,8 +163,10 @@
     state: link
     owner: root
     group: root
+  when:
+    - item != ''
+    - not nginx_skip_enable_sites
   with_items: "{{ nginx_sites }}"
-  when: not nginx_skip_enable_sites
   notify: reload nginx
   tags:
     - install
@@ -190,6 +192,7 @@
     state: link
     owner: root
     group: root
+  when: item != ''
   with_items: "{{ nginx_extra_sites }}"
   notify: reload nginx
   tags:
@@ -269,7 +272,7 @@
     state: "{{ item.state  }}"
     path: "{{ nginx_htpasswd_file }}"
   with_items: "{{ NGINX_USERS }}"
-  when: NGINX_CREATE_HTPASSWD_FILE
+  when: NGINX_CREATE_HTPASSWD_FILE | bool
   tags:
     - install
     - install:configuration

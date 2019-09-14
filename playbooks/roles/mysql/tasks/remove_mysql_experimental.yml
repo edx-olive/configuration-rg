@@ -11,9 +11,6 @@
 
 - name: Remove experimental version of mysql
   apt: 
-    name: "{{ item }}" 
+    name: ['mysql-server-5.6', 'mysql-server']
     state: absent 
     purge: yes
-  with_items:
-    - mysql-server-5.6
-    - mysql-server

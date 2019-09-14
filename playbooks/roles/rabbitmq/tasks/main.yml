@@ -5,12 +5,11 @@
 #
 - name: install packages needed by rabbit
   apt:
-    name: "{{ item }}"
+    name: "{{ rabbitmq_debian_pkgs }}"
     state: present
     install_recommends: yes
     force: yes
     update_cache: yes
-  with_items: "{{ rabbitmq_debian_pkgs }}"
   tags:
     - install
     - install:app-requirements

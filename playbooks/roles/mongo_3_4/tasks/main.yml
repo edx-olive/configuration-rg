@@ -51,12 +51,11 @@
 
 - name: install mongo server and recommends
   apt:
-    pkg: "{{ item }}"
+    pkg: "{{ mongodb_debian_pkgs }}"
     state: present
     install_recommends: yes
     force: yes
     update_cache: yes
-  with_items: "{{ mongodb_debian_pkgs }}"
   tags:
     - "install"
     - "install:app-requirements"
