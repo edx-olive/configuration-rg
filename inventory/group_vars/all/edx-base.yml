@@ -118,6 +118,7 @@ _EDXAPP_FEATURES:
   S3_USE_SIGV4: "{{ EDXAPP_S3_USE_SIGV4 }}"
   S3_HOST: "{{ EDXAPP_S3_HOST | default('null')}}"
   #end
+  ENABLE_ACCOUNT_DELETION: "{{ COMMON_ENABLE_ACCOUNT_DELETION }}"
 
 EDXAPP_WORKERS:
   lms: '(multiprocessing.cpu_count()-1) * {{ worker_core_mult.lms }} + {{ worker_core_mult.lms }}'

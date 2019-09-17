@@ -510,7 +510,26 @@
     minute: "{{ EDXAPP_CLEARSESSIONS_CRON_MINUTES }}"
     day: "*"
   when: EDXAPP_CLEARSESSIONS_CRON_ENABLED
+  tags:
+    - install
+    - install:base
 
 - name: install additional cron jobs
   cron: "{{ item }}"
   with_items: "{{ EDXAPP_ADDITIONAL_CRON_JOBS }}"
+  tags:
+    - install
+    - install:base
+
+- name: setup user retirement
+  command: "{{ item }}"
+  with_items:
+    - "{{ edxapp_venv_bin }}/python {{ edxapp_code_dir }}/manage.py lms --settings={{ edxapp_settings }} populate_retirement_states"
+    - "{{ edxapp_venv_bin }}/python {{ edxapp_code_dir }}/manage.py lms --settings={{ edxapp_settings }} manage_user {{ EDXAPP_RETIREMENT_SERVICE_WORKER_USERNAME }} {{ EDXAPP_RETIREMENT_SERVICE_WORKER_USERNAME }}@example.com --staff --superuser"
+    - "{{ edxapp_venv_bin }}/python {{ edxapp_code_dir }}/manage.py lms --settings={{ edxapp_settings }} create_dot_application --client-id {{ EDXAPP_RETIREMENT_DOT_CLIENT_ID }} --client-secret {{ EDXAPP_RETIREMENT_DOT_CLIENT_SECRET }} retirement {{ EDXAPP_RETIREMENT_SERVICE_WORKER_USERNAME }}"
+    - "{{ edxapp_venv_bin }}/python {{ edxapp_code_dir }}/manage.py lms --settings={{ edxapp_settings }} create_oauth2_client {{ EDXAPP_LMS_ROOT_URL }} {{ EDXAPP_LMS_ROOT_URL }}/complete/edx-oidc/ confidential --client_id {{ EDXAPP_RETIREMENT_DOT_CLIENT_ID }} --client_secret {{ EDXAPP_RETIREMENT_DOT_CLIENT_SECRET }} --client_name retirement --username {{ EDXAPP_RETIREMENT_SERVICE_WORKER_USERNAME }} --trusted"
+  when: COMMON_ENABLE_ACCOUNT_DELETION
+  tags:
+    - install
+    - install:base
+    - manage
