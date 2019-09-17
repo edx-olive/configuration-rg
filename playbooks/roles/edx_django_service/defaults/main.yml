@@ -229,3 +229,7 @@ edx_django_service_post_migrate_commands: []
 EDX_DJANGO_SERVICE_ENABLE_ADMIN_URLS_RESTRICTION: false
 
 EDX_DJANGO_SERVICE_ADMIN_URLS: []
+
+edx_django_service_superuser_username: ''
+edx_django_service_superuser_email: 'staff@example.com'
+edx_django_service_superuser_password: 'password'
