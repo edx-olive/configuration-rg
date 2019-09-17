@@ -2,9 +2,13 @@
 #
 # single server install
 #
-- include_vars: ~/playbooks/roles/backup-duplicity/defaults/main.yml
-- include_vars: ~/playbooks/roles/forum/defaults/main.yml
-- include_vars: ~/vault/roles/zabbix/zabbix-rg-api.yml
+- include_vars: "{{ item }}"
+  with_items:
+    - ~/playbooks/roles/backup-duplicity/defaults/main.yml
+    - ~/playbooks/roles/forum/defaults/main.yml
+    - ~/vault/roles/zabbix/zabbix-rg-api.yml
+  tags:
+    - always
 
 - import_role:
     name: python
