@@ -27,8 +27,11 @@
       - "lms"
 
 - import_role:
-    name: edxlocal
+    name: mysql
   when: EDXAPP_MYSQL_HOST == 'localhost' or EDXAPP_MYSQL_HOST == '127.0.0.1'
+
+- import_role:
+    name: edxlocal
 
 - import_role:
     name: memcache
