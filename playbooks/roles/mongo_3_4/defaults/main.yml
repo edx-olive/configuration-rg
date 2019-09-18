@@ -3,7 +3,7 @@ mongo_logappend: true
 #This way, when mongod receives a SIGUSR1, it'll close and reopen its log file handle
 mongo_logrotate: reopen
 
-mongo_version: 3.4.18
+mongo_version: 3.4.22
 mongo_port: "27017"
 mongo_extra_conf: ''
 mongo_key_file: '/etc/mongodb_key'
@@ -17,8 +17,7 @@ mongo_user: mongodb
 MONGODB_REPO: "deb http://repo.mongodb.org/apt/ubuntu {{ ansible_distribution_release }}/mongodb-org/3.4 multiverse"
 # Key id taken from https://docs.mongodb.com/v3.4/tutorial/install-mongodb-on-ubuntu/
 # Changes with each major mongo release, so must be updated with Mongo upgrade
-MONGODB_APT_KEY: "0C49F3730359A14518585931BC711F9BA15703C6"
-MONGODB_APT_KEYSERVER: "keyserver.ubuntu.com"
+MONGODB_APT_KEY: "https://www.mongodb.org/static/pgp/server-3.4.asc"
 
 mongodb_debian_pkgs:
   - "mongodb-org={{ mongo_version }}"
@@ -26,8 +25,6 @@ mongodb_debian_pkgs:
   - "mongodb-org-shell={{ mongo_version }}"
   - "mongodb-org-mongos={{ mongo_version }}"
   - "mongodb-org-tools={{ mongo_version }}"
-
-
 
 mongo_configure_replica_set: true
 
