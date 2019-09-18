@@ -1,7 +1,7 @@
 ---
-# Example sandbox configuration
-# for single server community
-# installs
+#
+# single server install
+#
 - include_vars: ~/playbooks/roles/backup-duplicity/defaults/main.yml
 - include_vars: ~/playbooks/roles/forum/defaults/main.yml
 - include_vars: ~/vault/roles/zabbix/zabbix-rg-api.yml
@@ -17,13 +17,14 @@
     name: nginx
   vars:
     nginx_sites:
-        - certs
-        - cms
-        - lms
-        - forum
-        - xqueue
+      - "lms"
+      - "cms"
+      - "{{ 'certs' if COMMON_ENABLE_CERTS else '' }}"
+      - "{{ 'forum' if COMMON_ENABLE_FORUM else '' }}"
+      - "{{ 'xqueue' if COMMON_ENABLE_XQUEUE else '' }}"
+      - "{{ 'insights' if COMMON_ENABLE_INSIGHTS else '' }}"
     nginx_default_sites:
-        - lms
+      - "lms"
 
 - import_role:
     name: edxlocal
@@ -39,11 +40,11 @@
 
 - import_role:
     name: rabbitmq
-  vars:
-    rabbitmq_ip: 127.0.0.1
+  when: rabbitmq_ip == 'localhost' or rabbitmq_ip == '127.0.0.1'
 
 - import_role:
     name: oraclejdk
+  when: "'localhost' in EDXAPP_ELASTIC_SEARCH_CONFIG|map(attribute='host') or '127.0.0.1' in EDXAPP_ELASTIC_SEARCH_CONFIG|map(attribute='host')"
 
 - import_role:
     name: elasticsearch
@@ -56,65 +57,69 @@
 
 - import_role:
     name: ecommerce
-  when: SANDBOX_ENABLE_ECOMMERCE is defined and SANDBOX_ENABLE_ECOMMERCE
+  when: COMMON_ENABLE_ECOMMERCE
 
 - import_role:
     name: ecomworker
   vars:
     ECOMMERCE_WORKER_BROKER_HOST: 127.0.0.1
-  when: SANDBOX_ENABLE_ECOMMERCE is defined and SANDBOX_ENABLE_ECOMMERCE
+  when: COMMON_ENABLE_ECOMMERCE
 
 - import_role:
     name: rg_instructor_analytics_log_collector
-  when: "{{ EDXAPP_RG_INSTRUCTOR_ANALYTICS_ENABLE | default(False) }}"
+  when: EDXAPP_RG_INSTRUCTOR_ANALYTICS_ENABLE
 
 - import_role:
     name: celerybeat
-  when: EDXAPP_CELERY_BEAT.enabled | default(False)
+  when: COMMON_ENABLE_CELERY_BEAT
 
 - import_role:
     name: analytics_api
-  when: SANDBOX_ENABLE_ANALYTICS_API is defined and SANDBOX_ENABLE_ANALYTICS_API
+  when: COMMON_ENABLE_ANALYTICS_API
 
 - import_role:
     name: insights
-  when: SANDBOX_ENABLE_INSIGHTS is defined and SANDBOX_ENABLE_INSIGHTS
+  when: COMMON_ENABLE_INSIGHTS
 
 - import_role:
     name: edx_notes_api
   when: EDXAPP_ENABLE_EDXNOTES
 
 - import_role:
-    name: demo
-
-- import_role:
-    name: oauth_client_setup
-
-- import_role:
     name: forum
-
-- import_role:
-    name: discovery
-  when: SANDBOX_ENABLE_DISCOVERY is defined and SANDBOX_ENABLE_DISCOVERY
-
-- import_role:
-    name: credentials
-  when: SANDBOX_ENABLE_CREDENTIALS is defined and SANDBOX_ENABLE_CREDENTIALS
-
-- import_role:
-    name: journals
-  when: JOURNALS_ENABLED is defined and JOURNALS_ENABLED
+  when: COMMON_ENABLE_FORUM
 
 - import_role:
     name: notifier
+  when: COMMON_ENABLE_FORUM
+
+- import_role:
+    name: discovery
+  when: COMMON_ENABLE_DISCOVERY
+
+- import_role:
+    name: credentials
+  when: COMMON_ENABLE_CREDENTIALS
+
+- import_role:
+    name: journals
+  when: JOURNALS_ENABLED
 
 - import_role:
     name: xqueue
   vars:
     update_users: True
+  when: COMMON_ENABLE_XQUEUE
 
 - import_role:
     name: certs
+  when: COMMON_ENABLE_CERTS
+
+- import_role:
+    name: demo
+
+- import_role:
+    name: oauth_client_setup
 
 - import_role:
     name: datadog
