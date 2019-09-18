@@ -27,51 +27,19 @@
   when: zabbix_enabled and hosts.stdout != ''
   delegate_to: localhost
 
-- name: Update expired rabbitmq repo key
-  shell: "curl -L https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey | apt-key add -"
+- name: Check for expired apt keys
+  command: "apt-key list | grep expired:"
+  register: ppa_key_status
+
+- name: Update known expired repo keys
+  shell: "{{ item }}"
   args:
     warn: False
+  with_items:
+    - "apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 69464050"
+    - "curl -L https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey | apt-key add -"
+  when: 'expired' in ppa_key_status.stdout
   become: True
-
-- name: Update expired edX PPA repo key
-  shell: "apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 69464050"
-  args:
-    warn: False
-  become: True
-
-- name: HotFix for server_names_hash_bucket_size
-  stat: path=/etc/nginx/nginx.conf
-  register: nginx_conf
-
-- name: HotFix for server_names_hash_bucket_size
-  lineinfile:
-    path: '/etc/nginx/sites-enabled/ssl.conf'
-    regexp: '^server_names_hash_bucket_size'
-    state: absent
-  when: nginx_conf.stat.exists
-  become: true
-  become_user: root
-  ignore_errors: yes
-
-- name: HotFix for server_names_hash_bucket_size
-  lineinfile:
-    path: '/etc/nginx/sites-enabled/edx-http.conf'
-    regexp: '^server_names_hash_bucket_size'
-    state: absent
-  when: nginx_conf.stat.exists
-  become: true
-  become_user: root
-  ignore_errors: yes
-
-- name: HotFix for server_names_hash_bucket_size
-  lineinfile:
-    path: "/etc/nginx/nginx.conf"
-    regexp: ".*server_names_hash_bucket_size.*"
-    line: "        server_names_hash_bucket_size 128;"
-    state: present
-  when: nginx_conf.stat.exists
-  become: true
-  become_user: root
 
 - name: Sending slack notification
   slack:
