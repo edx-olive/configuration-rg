@@ -38,8 +38,8 @@
   with_items:
     - "apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 69464050"
     - "curl -L https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey | apt-key add -"
-  when: 'expired' in ppa_key_status.stdout
   become: True
+  when: "'expired' in ppa_key_status.stdout"
 
 - name: Sending slack notification
   slack:
