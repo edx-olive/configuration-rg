@@ -64,13 +64,13 @@ forum_base_env: &forum_base_env
   LISTEN_HOST: "{{ FORUM_LISTEN_HOST }}"
   LISTEN_PORT: "{{ FORUM_LISTEN_PORT }}"
 
-
 forum_env:
   <<: *forum_base_env
   RACK_ENV: "{{ FORUM_RACK_ENV }}"
   SINATRA_ENV: "{{ FORUM_SINATRA_ENV }}"
   SEARCH_SERVER: "{{ FORUM_ELASTICSEARCH_URL }}"
   MONGOHQ_URL: "{{ FORUM_MONGO_URL }}"
+
 devstack_forum_env:
   <<: *forum_base_env
   RACK_ENV: "development"
