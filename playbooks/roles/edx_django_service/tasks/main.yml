@@ -139,7 +139,7 @@
     path: "{{ item }}"
     state: touch
     owner: "{{ common_web_user }}"
-    group: "{{ common_web_user }}"
+    group: "{{ common_web_group }}"
   with_items: '{{ edx_django_service_name_devstack_logs }}'
   tags:
     - install
@@ -151,7 +151,7 @@
     dest: "{{ edx_django_service_home }}/{{ edx_django_service_name }}.sh"
     mode: 0650
     owner: "{{ supervisor_user }}"
-    group: "{{ common_web_user }}"
+    group: "{{ common_web_group }}"
   tags:
     - install
     - install:configuration
@@ -161,7 +161,7 @@
     src: "edx/app/supervisor/conf.d.available/app.conf.j2"
     dest: "{{ supervisor_available_dir }}/{{ edx_django_service_name }}.conf"
     owner: "{{ supervisor_user }}"
-    group: "{{ common_web_user }}"
+    group: "{{ common_web_group }}"
     mode: 0644
   tags:
     - install
@@ -172,7 +172,7 @@
     src: "edx/app/app/devstack.sh.j2"
     dest: "{{ edx_django_service_home }}/devstack.sh"
     owner: "{{ supervisor_user }}"
-    group: "{{ common_web_user }}"
+    group: "{{ common_web_group }}"
     mode: 0744
   when: edx_django_service_is_devstack is defined and edx_django_service_is_devstack
   tags:
@@ -243,6 +243,24 @@
     - assets
     - assets:gather
 
+- name: create django specific directories
+  file:
+    path: "{{ item.dir }}"
+    state: directory
+    owner: "{{ item.owner }}"
+    group: "{{ common_web_group }}"
+    mode: "0755"
+  with_items:
+    - dir: "{{ edx_django_service_data_dir }}"
+      owner: "{{ edx_django_service_user }}"
+    - dir: "{{ edx_django_service_data_dir }}/media"
+      owner: "{{ common_web_user }}"
+    - dir: "{{ edx_django_service_data_dir }}/uploads"
+      owner: "{{ common_web_user }}"
+  tags:
+    - install
+    - install:base
+
 - name: restart the application
   supervisorctl:
     state: restarted
@@ -260,7 +278,7 @@
     src: "edx/app/nginx/sites-available/app.j2"
     dest: "{{ nginx_sites_available_dir }}/{{ edx_django_service_name }}"
     owner: root
-    group: "{{ common_web_user }}"
+    group: "{{ common_web_group }}"
     mode: 0640
   when: nginx_app_dir is defined
   notify: reload nginx
