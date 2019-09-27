@@ -1,4 +1,7 @@
+---
+
 filebeat_enable: false
+
 filebeat:
   version: 6
   modules:

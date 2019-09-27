@@ -1,11 +1,15 @@
 ---
+
+# TODO move/remove notifications config into separate task
+
 slack_notification_channels:
   dev: []
   stage: []
   prod: []
 
-rg_support_package: "Default"
+# TODO refactoring to get rid of undefined variables in ansible tasks
 
+rg_support_package: "Default"
 zabbix_enabled: false
 zabbix_force_in_maintenance: false
 
