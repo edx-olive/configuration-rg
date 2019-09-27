@@ -1,0 +1,9 @@
+---
+
+SWAPFILE_SIZE: "8GB"
+
+forum_version: "open-release/ironwood.2"
+NOTIFIER_VERSION: "open-release/ironwood.2"
+xqueue_version: "open-release/ironwood.2"
+certs_version: "open-release/ironwood.2"
+demo_version: "open-release/ironwood.2"

@@ -31,11 +31,16 @@ _EDXAPP_MKTG_URL_LINK_MAP:
   WHAT_IS_VERIFIED_CERT: "verified-certificate"
   HOW_IT_WORKS: "how-to-use"
 
-_EDXAPP_CMS_MKTG_URLS:
-  TOS: '//{{ EDXAPP_SITE_NAME }}/tos'
-
 EDXAPP_LOCALESET_FROM_REQUEST:
   "en": "en_US.utf8"
+
+EDXAPP_COMMENTS_SERVICE_URL: "http://{{ forum_host }}:18080"
+EDXAPP_RABBIT_HOSTNAME: "{{ rabbit_master }}"
+EDXAPP_XQUEUE_URL: "http://{{ xqueue_host }}:18040"
+EDXAPP_OEE_URL: "http://{{ ora_host }}:18040/"
+EDXAPP_MEMCACHE: ["{{ memcached_host }}:11211"]
+EDXAPP_NEWRELIC_LMS_APPNAME: "{{ EDXAPP_SITE_NAME }}"
+EDXAPP_NEWRELIC_CMS_APPNAME: "{{ EDXAPP_CMS_SITE_NAME }}"
 
 # _EDXAPP_FEATURES - base installation defaults
 # merged with EDXAPP_FEATURES_OVERRIDE into EDXAPP_FEATURES

@@ -2,33 +2,12 @@
 #
 # single server install
 #
-- include_vars: "{{ item }}"
-  with_items:
-    - ~/playbooks/roles/backup-duplicity/defaults/main.yml
-    - ~/playbooks/roles/forum/defaults/main.yml
-    - ~/vault/roles/zabbix/zabbix-rg-api.yml
-  tags:
-    - always
-
 - import_role:
     name: python
 
 - import_role:
     name: swapfile
   when: SWAPFILE_SIZE is defined and SWAPFILE_SIZE != ''
-
-- import_role:
-    name: nginx
-  vars:
-    nginx_sites:
-      - "lms"
-      - "cms"
-      - "{{ 'certs' if COMMON_ENABLE_CERTS else '' }}"
-      - "{{ 'forum' if COMMON_ENABLE_FORUM else '' }}"
-      - "{{ 'xqueue' if COMMON_ENABLE_XQUEUE else '' }}"
-      - "{{ 'insights' if COMMON_ENABLE_INSIGHTS else '' }}"
-    nginx_default_sites:
-      - "lms"
 
 - import_role:
     name: mysql
@@ -127,9 +106,28 @@
     name: oauth_client_setup
 
 - import_role:
+    name: filebeat
+  vars:
+    filebeat_enable: "{{ COMMON_ENABLE_FILEBEAT }}"
+
+- import_role:
     name: datadog
   when: COMMON_ENABLE_DATADOG
 
 - import_role:
     name: datadog-uninstall
   when: not COMMON_ENABLE_DATADOG
+
+- import_role:
+    name: nginx
+  vars:
+    nginx_sites:
+      - "lms"
+      - "cms"
+      - "{{ 'certs' if COMMON_ENABLE_CERTS else '' }}"
+      - "{{ 'forum' if COMMON_ENABLE_FORUM else '' }}"
+      - "{{ 'xqueue' if COMMON_ENABLE_XQUEUE else '' }}"
+      - "{{ 'insights' if COMMON_ENABLE_INSIGHTS else '' }}"
+    nginx_default_sites:
+      - "lms"
+  tags: [ "debuggg" ]

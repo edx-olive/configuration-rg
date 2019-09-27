@@ -1,8 +1,4 @@
 ---
-- include_vars: ~/vault/roles/zabbix/zabbix-rg-api.yml
-  tags:
-    - always
-
 - name: setting up default hostname
   set_fact:
     zabbix_server_host_dns: "{{ inventory_hostname }}"

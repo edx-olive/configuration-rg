@@ -11,4 +11,5 @@
 # Role includes for role insights
 # 
 
-
+dependencies:
+  - role: common_vars

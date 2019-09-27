@@ -3,7 +3,12 @@
 
 backup_enabled: "{{ COMMON_ENABLE_BACKUPS_DUPLICITY }}"
 
-backup_duplicity: []
+backup_user: 'duplicity'
+backup_duplicity:
+  target: 's3://s3.amazonaws.com/backups_bucket'
+  target_method: 's3'
+  target_user: "{{ EDXAPP_AWS_ACCESS_KEY_ID }}"
+  target_pass: "{{ EDXAPP_AWS_SECRET_ACCESS_KEY }}"
 
 edx_backup_duplicity_profiles:
   - name: 'mysql'

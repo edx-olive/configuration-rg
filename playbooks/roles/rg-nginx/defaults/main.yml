@@ -15,7 +15,6 @@ nginx_letsencrypt: no
 nginx_letsencrypt_setup: no
 nginx_http2: yes
 insights: no
-COMMON_APP_DIR: "/edx/app"
 nginx_app_dir: "{{ COMMON_APP_DIR }}/nginx"
 nginx_sites_enabled_dir: "/etc/nginx/sites-enabled"
 nginx_ssl_config: "ssl.conf"
@@ -35,11 +34,6 @@ NGINX_ROBOT_RULES:
 
 htpasswd_enabled: False
 htpasswd_services: []
-EDXAPP_LMS_BASE: ''
-EDXAPP_CMS_BASE: ''
-EDXAPP_PREVIEW_LMS_BASE: ''
-EDXAPP_LMS_NGINX_PORT: ''
-EDXAPP_CMS_NGINX_PORT: ''
 
 RG_NGINX_LMS_CLIENT_MAX_BODY_SIZE: 4m
 RG_NGINX_CMS_CLIENT_MAX_BODY_SIZE: 100m
