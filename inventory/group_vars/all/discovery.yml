@@ -1,6 +1,4 @@
 ---
-COMMON_ENABLE_DISCOVERY: False
-
 DISCOVERY_VERSION: 'open-release/hawthorn.2'
 
 DISCOVERY_DOMAIN: 'discovery.example.com'

@@ -1,6 +1,10 @@
 ---
 
-nginx_default_redirect_to_lms: false
+forum_version: "open-release/ironwood.2"
+NOTIFIER_VERSION: "open-release/ironwood.2"
+xqueue_version: "open-release/ironwood.2"
+certs_version: "open-release/ironwood.2"
+demo_version: "open-release/ironwood.2"
 
 mysql_host: "localhost"
 worker_host: "127.0.0.1"
@@ -12,26 +16,11 @@ rabbitmq_ip: "{{ rabbit_master }}"
 xqueue_host: "127.0.0.1"
 certs_host: "127.0.0.1"
 forum_host: "127.0.0.1"
-edxapp_cms_gunicorn_host: "127.0.0.1"
-edxapp_lms_gunicorn_host: "127.0.0.1"
+ora_host: "127.0.0.1"
 
 migrate_db: "yes"
 
-edxapp_cms_gunicorn_port: 8010
-edxapp_lms_gunicorn_port: 8000
-EDXAPP_LMS_NGINX_PORT: 18000
-EDXAPP_CMS_NGINX_PORT: 18010
-NGINX_REDIRECT_TO_HTTPS: false
-
-EDXAPP_MYSQL_HOST: "{{ mysql_host }}"
-EDXAPP_MYSQL_CSMH_HOST: "{{ mysql_host }}"
-
-EDXAPP_MONGO_HOSTS: "{{ mongo_hosts }}"
-
-EDXAPP_SEARCH_HOST: "{{ elasticsearch_host }}"
-
 XQUEUE_LOGGING_ENV: production
-XQUEUE_RABBITMQ_HOSTNAME: "{{ rabbit_master }}"
 XQUEUE_MYSQL_HOST: "{{ mysql_host }}"
 
 CERTS_QUEUE_URL: "http://{{ xqueue_host }}:18040"
@@ -48,9 +37,6 @@ FORUM_MONGO_URL: "mongodb://{{ FORUM_MONGO_USER }}:{{ FORUM_MONGO_PASSWORD }}@{{
 
 NOTIFIER_LANGUAGE: "{{ EDXAPP_LANGUAGE_CODE }}"
 
-NEWRELIC_LICENSE_KEY: ''
-
-COMMON_EDX_PPA_KEY_SERVER: "hkp://keyserver.ubuntu.com:80"
 MONGODB_APT_KEYSERVER: "{{ COMMON_EDX_PPA_KEY_SERVER }}"
 MONGO_CLIENT_MONGODB_APT_KEYSERVER: "{{ COMMON_EDX_PPA_KEY_SERVER }}"
 SERVER_UTILS_EDX_PPA_KEY_SERVER: "{{ COMMON_EDX_PPA_KEY_SERVER }}"

@@ -1,6 +1,6 @@
 ---
 
-COMMON_OAUTH_BASE_URL: "{{ EDXAPP_LMS_ROOT_URL }}"
+EDXAPP_TIME_ZONE: "UTC"
 
 # mitigating potentional memory-leak in LMS and CMS django workers
 EDXAPP_LMS_MAX_REQ: 1000
@@ -16,7 +16,7 @@ EDXAPP_COURSE_CATALOG_VISIBILITY_PERMISSION: "see_in_catalog"
 EDXAPP_COURSE_ABOUT_VISIBILITY_PERMISSION: "see_about_page"
 
 # If you want disable link on page, just set null
-_EDXAPP_MKTG_URL_LINK_MAP:
+EDXAPP_MKTG_URL_LINK_MAP:
   ABOUT: "about"
   CONTACT: "contact"
   FAQ: "help"
@@ -34,13 +34,25 @@ _EDXAPP_MKTG_URL_LINK_MAP:
 EDXAPP_LOCALESET_FROM_REQUEST:
   "en": "en_US.utf8"
 
+EDXAPP_LOGIN_REDIRECT_WHITELIST:
+  - "{{ EDXAPP_LMS_BASE }}"
+  - "{{ EDXAPP_CMS_BASE }}"
+  - "{{ EDXAPP_PREVIEW_LMS_BASE }}"
+
+EDXAPP_REINDEX_ALL_COURSES: true
+
 EDXAPP_COMMENTS_SERVICE_URL: "http://{{ forum_host }}:18080"
 EDXAPP_RABBIT_HOSTNAME: "{{ rabbit_master }}"
 EDXAPP_XQUEUE_URL: "http://{{ xqueue_host }}:18040"
 EDXAPP_OEE_URL: "http://{{ ora_host }}:18040/"
-EDXAPP_MEMCACHE: ["{{ memcached_host }}:11211"]
+EDXAPP_MEMCACHE: [ "{{ memcached_host }}:11211" ]
 EDXAPP_NEWRELIC_LMS_APPNAME: "{{ EDXAPP_SITE_NAME }}"
 EDXAPP_NEWRELIC_CMS_APPNAME: "{{ EDXAPP_CMS_SITE_NAME }}"
+
+EDXAPP_MYSQL_HOST: "{{ mysql_host }}"
+EDXAPP_MYSQL_CSMH_HOST: "{{ mysql_host }}"
+EDXAPP_MONGO_HOSTS: "{{ mongo_hosts }}"
+EDXAPP_SEARCH_HOST: "{{ elasticsearch_host }}"
 
 # _EDXAPP_FEATURES - base installation defaults
 # merged with EDXAPP_FEATURES_OVERRIDE into EDXAPP_FEATURES
@@ -116,3 +128,5 @@ _EDXAPP_FEATURES:
   S3_HOST: "{{ EDXAPP_S3_HOST | default('null')}}"
   #end
   ENABLE_ACCOUNT_DELETION: "{{ COMMON_ENABLE_ACCOUNT_DELETION }}"
+  ENABLE_SHOPPING_CART: "{{ COMMON_ENABLE_SHOPPING_CART }}"
+  ENABLE_PAID_COURSE_REGISTRATION: "{{ COMMON_ENABLE_SHOPPING_CART }}"

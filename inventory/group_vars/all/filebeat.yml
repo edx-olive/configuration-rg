@@ -1,6 +1,6 @@
 ---
 
-filebeat_enable: false
+filebeat_enable: "{{ COMMON_ENABLE_FILEBEAT }}"
 
 filebeat:
   version: 6
@@ -22,9 +22,9 @@ filebeat:
   template_pattern: '{{ ansible_fqdn }}-*'
   dashboards_index: '{{ ansible_fqdn }}-*'
   shards: 1
-  kibana_host: https://logs.raccoongang.com
+  kibana_host: "{{ KIBANA_HOST | default('kibana.example.com') }}"
   kibana_port: 443
-  kibana_username: elastic
-  kibana_password: "{{ vault_elastic_web_passwd }}"
-  elastic_username: elastic
-  elastic_password: "{{ vault_elastic_web_passwd }}"
+  kibana_username: "{{ KIBANA_ELASTIC_WEB_USER | default('user') }}"
+  kibana_password: "{{ KIBANA_ELASTIC_WEB_PASSWORD | default('password') }}"
+  elastic_username: "{{ KIBANA_ELASTIC_WEB_USER | default('user') }}"
+  elastic_password: "{{ KIBANA_ELASTIC_WEB_PASSWORD | default('password') }}"

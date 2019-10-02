@@ -12,7 +12,6 @@ RUN mkdir .ssh
 COPY --chown=ansible bootstrap.sh .
 
 COPY --chown=ansible playbooks /home/ansible/playbooks
-COPY --chown=ansible vault /home/ansible/vault
 COPY --chown=ansible inventory/ /home/ansible/inventory
 
 ENV ANSIBLE_ROLES_PATH=/home/ansible/playbooks/roles \

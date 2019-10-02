@@ -6,7 +6,7 @@ Release based on upstream release tag - https://github.com/edx/configuration/tre
 Changes applied from previuos releases:
 ---------------------------------------
 
-- all changes applied upon migration from github.com to GitLab
+- all changes from Hawthorn release applied upon migration from github.com to GitLab
 - Update elasticsearch config to prevent clustering in KVM
 - Added possibility of deployment from private repositories
 - AzStorage support in platform didn't support standard EDXAPP_GRADE_STORAGE_KWARGS (cherry-pick from Microfost)
@@ -27,6 +27,10 @@ Changes specific for ironwood-rg release:
 - role rg-edx-single: switched to mongo_3_4
 - mysql, edxlocal roles: split into two separate roles (for multi-instance installations). role mysql is to run on mysql instance. role edxlocal is to run on specific instance to add databases and users
 - defined COMMON features flags for OpenEdx components
+- refactoring: inventory - removed variables with values equal to roles default values.
+- refactoring: inventory - reorgaznized file naming and variables grouping
+- refactoring: inventory - removed all private secrets and vaults
+- common_vars - disabled certs and xqueue services by default (not used in base installation)
 
 To do list:
 -----------
@@ -50,3 +54,4 @@ Release specific repositories:
 
 - configuration - https://gitlab.raccoongang.com/edx/configuration/configuration-ironwood-rg.git
 - new project template - https://gitlab.raccoongang.com/edx/deployment/deployment-template-ironwood.git
+- theme - https://gitlab.raccoongang.com/edx/theme/base-theme-ironwood.git

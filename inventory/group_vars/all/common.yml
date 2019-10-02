@@ -1,9 +1,6 @@
 ---
 
-SWAPFILE_SIZE: "8GB"
+COMMON_OAUTH_BASE_URL: "{{ EDXAPP_LMS_ROOT_URL }}"
+COMMON_EDX_PPA_KEY_SERVER: "hkp://keyserver.ubuntu.com:80"
 
-forum_version: "open-release/ironwood.2"
-NOTIFIER_VERSION: "open-release/ironwood.2"
-xqueue_version: "open-release/ironwood.2"
-certs_version: "open-release/ironwood.2"
-demo_version: "open-release/ironwood.2"
+SWAPFILE_SIZE: "8GB"
