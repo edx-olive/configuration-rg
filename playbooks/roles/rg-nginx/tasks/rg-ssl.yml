@@ -4,43 +4,26 @@
   file:
     path: "{{ raccoongang_ssl_path }}"
     state: directory
+    mode: 0700
 
 - name: raccoongang ssl crt and key
   copy:
-    src: "{{ raccoongang_ssl_src_path }}/{{ item }}"
-    dest: "{{ raccoongang_ssl_path }}/{{ item }}"
+    content: "{{ item.content }}"
+    dest: "{{ raccoongang_ssl_path }}/{{ item.name }}"
   with_items:
-    - "{{ raccoongang_ssl_crt }}"
-    - "{{ raccoongang_ssl_key }}"
+    - name: 'raccoongang-ssl.crt'
+      content: "{{ raccoongang_ssl_crt }}"
+    - name: 'raccoongang-ssl.key'
+      content: "{{ raccoongang_ssl_key }}"
+  no_log: True
 
 - name: set lms_ssl_certificate_path fact
   set_fact:
-    lms_ssl_certificate_path: "{{ raccoongang_ssl_path }}/{{ raccoongang_ssl_crt }}"
-
-- name: set lms_ssl_certificate_key_path fact
-  set_fact:
-    lms_ssl_certificate_key_path: "{{ raccoongang_ssl_path }}/{{ raccoongang_ssl_key }}"
-
-- name: set cms_ssl_certificate_path fact
-  set_fact:
-    cms_ssl_certificate_path: "{{ raccoongang_ssl_path }}/{{ raccoongang_ssl_crt }}"
-
-- name: set cms_ssl_certificate_key_path fact
-  set_fact:
-    cms_ssl_certificate_key_path: "{{ raccoongang_ssl_path }}/{{ raccoongang_ssl_key }}"
-
-- name: set insights_ssl_certificate_path fact
-  set_fact:
-    insights_ssl_certificate_path: "{{ raccoongang_ssl_path }}/{{ raccoongang_ssl_crt }}"
-
-- name: set insights_ssl_certificate_key_path fact
-  set_fact:
-    insights_ssl_certificate_key_path: "{{ raccoongang_ssl_path }}/{{ raccoongang_ssl_key }}"
-
-- name: set analytics_api_ssl_certificate_path fact
-  set_fact:
-    analytics_api_ssl_certificate_path: "{{ raccoongang_ssl_path }}/{{ raccoongang_ssl_crt }}"
-
-- name: set analytics_api_ssl_certificate_key_path fact
-  set_fact:
-    analytics_api_ssl_certificate_key_path: "{{ raccoongang_ssl_path }}/{{ raccoongang_ssl_key }}"
+    lms_ssl_certificate_path: "{{ raccoongang_ssl_path }}/raccoongang-ssl.crt"
+    lms_ssl_certificate_key_path: "{{ raccoongang_ssl_path }}/raccoongang-ssl.key"
+    cms_ssl_certificate_path: "{{ raccoongang_ssl_path }}/raccoongang-ssl.crt"
+    cms_ssl_certificate_key_path: "{{ raccoongang_ssl_path }}/raccoongang-ssl.key"
+    insights_ssl_certificate_path: "{{ raccoongang_ssl_path }}/raccoongang-ssl.crt"
+    insights_ssl_certificate_key_path: "{{ raccoongang_ssl_path }}/raccoongang-ssl.key"
+    analytics_api_ssl_certificate_path: "{{ raccoongang_ssl_path }}/raccoongang-ssl.crt"
+    analytics_api_ssl_certificate_key_path: "{{ raccoongang_ssl_path }}/raccoongang-ssl.key"
