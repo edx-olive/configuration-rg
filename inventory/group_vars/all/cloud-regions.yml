@@ -1,0 +1,144 @@
+---
+aws_region_data: 
+  us-east-2:
+    aws_s3_endpoint: 's3.us-east-2.amazonaws.com'
+    timezone: 'America/New_York'
+    utc_offset: -5
+  us-east-1:
+    aws_s3_endpoint: 's3.amazonaws.com'
+    timezone: 'America/Virgin'
+    utc_offset: -4
+  us-west-1:
+    aws_s3_endpoint: 's3-us-west-1.amazonaws.com'
+    timezone: 'America/Los_Angeles'
+    utc_offset: -8
+  us-west-2:
+    aws_s3_endpoint: 's3-us-west-2.amazonaws.com'
+    timezone: 'America/Los_Angeles'
+    utc_offset: -7
+  ca-central-1:
+    aws_s3_endpoint: 's3.ca-central-1.amazonaws.com'
+    timezone: 'Canada/Central'
+    utc_offset: -5
+  ap-south-1:
+    aws_s3_endpoint: 's3.ap-south-1.amazonaws.com'
+    timezone: 'Asia/Singapore'
+    utc_offset: 8
+  ap-northeast-2:
+    aws_s3_endpoint: 's3.ap-northeast-2.amazonaws.com'
+    timezone: 'Asia/Seoul'
+    utc_offset: 9
+  ap-southeast-1:
+    aws_s3_endpoint: 's3-ap-southeast-1.amazonaws.com'
+    timezone: 'Asia/Singapore'
+    utc_offset: 8
+  ap-southeast-2:
+    aws_s3_endpoint: 's3-ap-southeast-2.amazonaws.com'
+    timezone: 'Australia/Sydney'
+    utc_offset: 11
+  ap-northeast-1:
+    aws_s3_endpoint: 's3-ap-northeast-1.amazonaws.com'
+    timezone: 'Asia/Tokyo'
+    utc_offset: 9
+  eu-central-1:
+    aws_s3_endpoint: 's3.eu-central-1.amazonaws.com'
+    timezone: 'Europe/Berlin'
+    utc_offset: 1
+  eu-west-1:
+    aws_s3_endpoint: 's3-eu-west-1.amazonaws.com'
+    timezone: 'Europe/Dublin'
+    utc_offset: 0
+  eu-west-2:
+    aws_s3_endpoint: 's3.eu-west-2.amazonaws.com'
+    timezone: 'Europe/London'
+    utc_offset: 0
+  sa-east-1:
+    aws_s3_endpoint: 's3-sa-east-1.amazonaws.com'
+    timezone: 'America/Sao_Paulo'
+    utc_offset: -3
+    
+azure_region_data:
+  eastasia:
+    timezone: 'Asia/Hong_Kong'  
+    utc_offset: 8
+  southeastasia:
+    timezone: 'Asia/Singapore'  
+    utc_offset: 8
+  centralus:
+    timezone: 'America/Chicago'  
+    utc_offset: -5
+  eastus:
+    timezone: 'America/New_York'  
+    utc_offset: -5
+  eastus2:
+    timezone: 'America/New_York'  
+    utc_offset: -5
+  westus:
+    timezone: 'America/Los_Angeles'  
+    utc_offset: -7
+  westus2:
+    timezone: 'America/Los_Angeles'  
+    utc_offset: -7
+  northcentralus:
+    timezone: 'America/Chicago'  
+    utc_offset: -5
+  southcentralus:
+    timezone: 'America/Chicago'    
+    utc_offset: -5
+  westcentralus:
+    timezone: 'America/Los_Angeles'  
+    utc_offset: -7
+  northeurope:
+    timezone: 'Europe/Dublin'  
+    utc_offset: 0
+  westeurope:
+    timezone: 'Europe/Amsterdam'  
+    utc_offset: 1
+  japanwest:
+    timezone: 'Asia/Tokyo'  
+    utc_offset: 9
+  japaneast:
+    timezone: 'Asia/Tokyo'  
+    utc_offset: 9
+  brazilsouth:
+    timezone: 'America/Sao_Paulo'  
+    utc_offset: -3
+  australiaeast:
+    timezone: 'Australia/Sydney'  
+    utc_offset: 11
+  australiasoutheast:
+    timezone: 'Australia/Melbourne'  
+    utc_offset: 11
+  southindia:
+    timezone: 'Asia/Calcutta'  
+    utc_offset: 5
+  centralindia:
+    timezone: 'Asia/Calcutta'  
+    utc_offset: 5
+  westindia:
+    timezone: 'Asia/Calcutta'  
+    utc_offset: 5
+  canadacentral:
+    timezone: 'America/Toronto'  
+    utc_offset: -4
+  canadaeast:
+    timezone: 'America/Toronto'  
+    utc_offset: -4
+  uksouth:
+    timezone: 'Europe/London'  
+    utc_offset: 0
+  ukwest:
+    timezone: 'Europe/London'  
+    utc_offset: 0
+  koreacentral:
+    timezone: 'Asia/Seoul'  
+    utc_offset: 9
+  koreasouth:
+    timezone: 'Asia/Seoul'
+    utc_offset: 9
+  francecentral:
+    timezone: 'UTC'
+    utc_offset: 0
+  southafricanorth:
+    timezone: 'Africa/Harare'
+    utc_offset: 2
