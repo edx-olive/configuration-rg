@@ -10,17 +10,13 @@ before_script:
 build-base-image:
     stage: build
     variables:
-        BASE_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG-develop
+        BASE_IMAGE: $CI_REGISTRY_IMAGE:latest
     script:
         - docker build -t $BASE_IMAGE .
         - docker push $BASE_IMAGE
         - echo image built - $BASE_IMAGE
     only:
         - master
-        - ficus-rg
-        - ginkgo-rg
-        - hawthorn-rg
-        - ironwood-rg
 
 build-version-image:
     extends: build-base-image
