@@ -421,7 +421,6 @@
     timeout: 2700
   when:
     - edxapp_installed is defined
-    - celery_worker is not defined
     - not disable_edx_services
     - edx_search_enabled
     - edx_search_configured is defined and not edx_search_configured.stat.exists
@@ -440,7 +439,6 @@
     timeout: 2700
   when:
     - edxapp_installed is defined
-    - celery_worker is not defined
     - not disable_edx_services
     - edx_search_enabled
     - not edx_search_configured.stat.exists
@@ -456,7 +454,6 @@
     state: touch
   when:
     - edxapp_installed is defined
-    - celery_worker is not defined
     - not disable_edx_services
     - edx_search_enabled
     - not edx_search_configured.stat.exists

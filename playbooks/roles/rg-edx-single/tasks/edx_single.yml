@@ -38,8 +38,6 @@
 
 - import_role:
     name: edxapp
-  vars:
-    celery_worker: True
 
 - import_role:
     name: ecommerce
