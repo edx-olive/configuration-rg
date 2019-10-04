@@ -17,10 +17,14 @@ build-base-image:
         - echo image built - $BASE_IMAGE
     only:
         - master
+    except:
+        - tags
 
 build-version-image:
     extends: build-base-image
     variables:
         BASE_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
     only:
-        - tags
+        - /^ironwood-rg-v[0-9]+\.[0-9]+\.[0-9]$/
+    except:
+        - branches
