@@ -197,7 +197,6 @@
     - gather_static_assets
     - assets
 
-<<<<<<< HEAD
 - name: Create empty staticfiles directory
   file:
     path: "{{ edxapp_staticfile_dir }}-new"
