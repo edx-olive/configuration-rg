@@ -53,7 +53,7 @@
 
 - import_role:
     name: celerybeat
-  when: COMMON_ENABLE_CELERY_BEAT
+  when: COMMON_ENABLE_CELERYBEAT
 
 - import_role:
     name: analytics_api
