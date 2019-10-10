@@ -37,6 +37,11 @@
     - install
     - install:base
 
+- name: un-hold elasticsearch package version
+  dpkg_selections:
+    name: "{{ elasticsearch_package_name }}"
+    selection: install
+
 - name: Add Elasticsearch Repo
   apt_repository:
     repo: "{{ elasticsearch_repo }}"
@@ -56,6 +61,11 @@
     - install
     - install:base
   register: elasticsearch_reinstall
+
+- name: hold elasticsearch package version
+  dpkg_selections:
+    name: "{{ elasticsearch_package_name }}"
+    selection: hold
 
 - name: create directories
   file:
