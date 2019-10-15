@@ -25,7 +25,7 @@
   delegate_to: localhost
 
 - name: Check for expired apt keys
-  command: "apt-key list | grep expired:"
+  shell: "apt-key list | grep expired: | cat"
   register: ppa_key_status
 
 - name: Update known expired repo keys
@@ -35,6 +35,7 @@
   with_items:
     - "apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 69464050"
     - "curl -L https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey | apt-key add -"
+    - 'curl -L https://www.mongodb.org/static/pgp/server-3.4.asc | apt-key add -'
   become: True
   when: "'expired' in ppa_key_status.stdout"
 
