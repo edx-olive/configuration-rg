@@ -218,6 +218,7 @@
     group: "{{ common_web_group }}"
     mode:  "0755"
   when: not devstack and not EDXAPP_REMOVE_STATICFILES_DIR_DURING_UPDATE
+  ignore_errors: True
   tags:
     - gather_static_assets
     - assets
