@@ -14,7 +14,7 @@ EDXAPP_STAFF_PASSWORD: edxPass123
 
 edxapp_user: edxapp
 edxapp_code_dir: "/edx/app/edxapp/edx-platform"
-COMMON_EDXAPP_SETTINGS: 'aws'
+COMMON_EDXAPP_SETTINGS: 'production'
 
 COMMON_BASE_DIR: /edx
 COMMON_APP_DIR: "{{ COMMON_BASE_DIR}}/app"
