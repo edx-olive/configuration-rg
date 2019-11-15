@@ -29,10 +29,6 @@
   when: rabbitmq_ip == 'localhost' or rabbitmq_ip == '127.0.0.1'
 
 - import_role:
-    name: oraclejdk
-  when: "'localhost' in EDXAPP_ELASTIC_SEARCH_CONFIG|map(attribute='host') or '127.0.0.1' in EDXAPP_ELASTIC_SEARCH_CONFIG|map(attribute='host')"
-
-- import_role:
     name: elasticsearch
   when: "'localhost' in EDXAPP_ELASTIC_SEARCH_CONFIG|map(attribute='host') or '127.0.0.1' in EDXAPP_ELASTIC_SEARCH_CONFIG|map(attribute='host')"
 
