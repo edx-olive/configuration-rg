@@ -29,12 +29,21 @@
   when: rabbitmq_ip == 'localhost' or rabbitmq_ip == '127.0.0.1'
 
 - import_role:
-    name: oraclejdk
+    name: elasticsearch
   when: "'localhost' in EDXAPP_ELASTIC_SEARCH_CONFIG|map(attribute='host') or '127.0.0.1' in EDXAPP_ELASTIC_SEARCH_CONFIG|map(attribute='host')"
 
 - import_role:
-    name: elasticsearch
-  when: "'localhost' in EDXAPP_ELASTIC_SEARCH_CONFIG|map(attribute='host') or '127.0.0.1' in EDXAPP_ELASTIC_SEARCH_CONFIG|map(attribute='host')"
+    name: nginx
+  vars:
+    nginx_sites:
+      - "lms"
+      - "cms"
+      - "{{ 'certs' if COMMON_ENABLE_CERTS else '' }}"
+      - "{{ 'forum' if COMMON_ENABLE_FORUM else '' }}"
+      - "{{ 'xqueue' if COMMON_ENABLE_XQUEUE else '' }}"
+      - "{{ 'insights' if COMMON_ENABLE_INSIGHTS else '' }}"
+    nginx_default_sites:
+      - "lms"
 
 - import_role:
     name: edxapp
@@ -115,16 +124,3 @@
 - import_role:
     name: datadog-uninstall
   when: not COMMON_ENABLE_DATADOG
-
-- import_role:
-    name: nginx
-  vars:
-    nginx_sites:
-      - "lms"
-      - "cms"
-      - "{{ 'certs' if COMMON_ENABLE_CERTS else '' }}"
-      - "{{ 'forum' if COMMON_ENABLE_FORUM else '' }}"
-      - "{{ 'xqueue' if COMMON_ENABLE_XQUEUE else '' }}"
-      - "{{ 'insights' if COMMON_ENABLE_INSIGHTS else '' }}"
-    nginx_default_sites:
-      - "lms"
