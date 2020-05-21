@@ -1,0 +1,41 @@
+stages:
+    - build
+
+services:
+    - docker:dind
+
+before_script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+
+build-base-image:
+    stage: build
+    variables:
+        BASE_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG-develop
+    script:
+        - docker build -t $BASE_IMAGE .
+        - docker push $BASE_IMAGE
+        - echo image built - $BASE_IMAGE
+    only:
+        - juniper.rc2
+        - juniper.rc2-rg-v0.0.2
+
+# version tag template: release-rg-v.X.Y.Z
+build-version-image:
+    stage: build
+    variables:
+        BASE_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+    script:
+        - FULL_VERSION=$BASE_IMAGE
+        - MINOR_VERSION=$(echo $FULL_VERSION | sed -n -e "s/\(^.*\)-.*$/\1/p")
+        - MAJOR_VERSION=$(echo $MINOR_VERSION | sed -n -e "s/\(^.*\)-.*$/\1/p")
+        - docker build -t $FULL_VERSION .
+        - docker tag $FULL_VERSION $MINOR_VERSION
+        - docker tag $FULL_VERSION $MAJOR_VERSION
+        - docker push $FULL_VERSION
+        - docker push $MINOR_VERSION
+        - docker push $MAJOR_VERSION
+        - echo image built - $FULL_VERSION
+        - echo image built - $MINOR_VERSION
+        - echo image built - $MAJOR_VERSION
+    only:
+        - tags

@@ -1,0 +1,30 @@
+---
+
+filebeat_enable: "{{ COMMON_ENABLE_FILEBEAT }}"
+
+filebeat:
+  version: 6
+  modules:
+    - auditd
+    - mysql
+    - nginx
+    - redis
+    - system
+  paths:
+    - /var/log/*
+    - /var/log/*/*
+    - /edx/var/log/*
+    - /edx/var/log/*/*.log
+  exclude_files:
+    - '.gz$'
+  index_pattern: '{{ ansible_fqdn }}-%{[beat.version]}-%{+yyyy.MM.dd}'
+  template_name: "{{ ansible_fqdn }}"
+  template_pattern: '{{ ansible_fqdn }}-*'
+  dashboards_index: '{{ ansible_fqdn }}-*'
+  shards: 1
+  kibana_host: "{{ KIBANA_HOST | default('kibana.example.com') }}"
+  kibana_port: 443
+  kibana_username: "{{ KIBANA_ELASTIC_WEB_USER | default('user') }}"
+  kibana_password: "{{ KIBANA_ELASTIC_WEB_PASSWORD | default('password') }}"
+  elastic_username: "{{ KIBANA_ELASTIC_WEB_USER | default('user') }}"
+  elastic_password: "{{ KIBANA_ELASTIC_WEB_PASSWORD | default('password') }}"
