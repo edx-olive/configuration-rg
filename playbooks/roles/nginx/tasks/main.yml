@@ -148,6 +148,7 @@
     owner: root
     group: "{{ common_web_user }}"
     mode: "0640"
+  when: item != ''
   with_items: "{{ nginx_sites }}"
   notify: reload nginx
   tags:
@@ -161,8 +162,10 @@
     state: link
     owner: root
     group: root
+  when:
+    - item != ''
+    - not nginx_skip_enable_sites
   with_items: "{{ nginx_sites }}"
-  when: not nginx_skip_enable_sites
   notify: reload nginx
   tags:
     - install
@@ -188,6 +191,7 @@
     state: link
     owner: root
     group: root
+  when: item != ''
   with_items: "{{ nginx_extra_sites }}"
   notify: reload nginx
   tags:

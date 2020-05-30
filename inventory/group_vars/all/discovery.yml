@@ -1,5 +1,5 @@
 ---
-DISCOVERY_VERSION: 'open-release/ironwood.2'
+DISCOVERY_VERSION: 'open-release/juniper.rc2'
 
 DISCOVERY_DOMAIN: 'discovery.example.com'
 DISCOVERY_URL_ROOT: "{{ EDXAPP_LMS_BASE_SCHEME | default('https') }}://{{ DISCOVERY_DOMAIN }}"

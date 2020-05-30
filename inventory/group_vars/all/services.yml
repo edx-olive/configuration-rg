@@ -1,10 +1,10 @@
 ---
 
-forum_version: "open-release/ironwood.2"
-NOTIFIER_VERSION: "open-release/ironwood.2"
-xqueue_version: "open-release/ironwood.2"
-certs_version: "open-release/ironwood.2"
-demo_version: "open-release/ironwood.2"
+forum_version: "open-release/juniper.rc2"
+NOTIFIER_VERSION: "open-release/juniper.rc2"
+xqueue_version: "open-release/juniper.rc2"
+certs_version: "open-release/juniper.rc2"
+demo_version: "open-release/juniper.rc2"
 
 mysql_host: "localhost"
 worker_host: "127.0.0.1"
@@ -46,6 +46,3 @@ NOTIFIER_DATABASE_PORT: "{{ EDXAPP_MYSQL_PORT }}"
 MONGODB_APT_KEYSERVER: "{{ COMMON_EDX_PPA_KEY_SERVER }}"
 MONGO_CLIENT_MONGODB_APT_KEYSERVER: "{{ COMMON_EDX_PPA_KEY_SERVER }}"
 SERVER_UTILS_EDX_PPA_KEY_SERVER: "{{ COMMON_EDX_PPA_KEY_SERVER }}"
-
-
-

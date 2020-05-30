@@ -2,6 +2,9 @@
 #
 # single server install
 #
+#- include_vars: ~/playbooks/roles/backup-duplicity/defaults/main.yml
+#- include_vars: ~/playbooks/roles/forum/defaults/main.yml
+
 - import_role:
     name: python
 
@@ -38,10 +41,10 @@
     nginx_sites:
       - "lms"
       - "cms"
-#      - "{{ 'certs' if COMMON_ENABLE_CERTS else '' }}"
-#      - "{{ 'forum' if COMMON_ENABLE_FORUM else '' }}"
-#      - "{{ 'xqueue' if COMMON_ENABLE_XQUEUE else '' }}"
-#      - "{{ 'insights' if COMMON_ENABLE_INSIGHTS else '' }}"
+      - "{{ 'certs' if COMMON_ENABLE_CERTS else '' }}"
+      - "{{ 'forum' if COMMON_ENABLE_FORUM else '' }}"
+      - "{{ 'xqueue' if COMMON_ENABLE_XQUEUE else '' }}"
+      - "{{ 'insights' if COMMON_ENABLE_INSIGHTS else '' }}"
     nginx_default_sites:
       - "lms"
 
@@ -94,7 +97,7 @@
 
 - import_role:
     name: blockstore
-  when: BLOCKSTORE_HERMES_ENABLED
+  when: SANDBOX_ENABLE_BLOCKSTORE
 
 - import_role:
     name: xqueue
