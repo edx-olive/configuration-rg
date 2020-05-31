@@ -1,10 +1,10 @@
 ---
 
-forum_version: "open-release/juniper.rc2"
-NOTIFIER_VERSION: "open-release/juniper.rc2"
-xqueue_version: "open-release/juniper.rc2"
-certs_version: "open-release/juniper.rc2"
-demo_version: "open-release/juniper.rc2"
+FORUM_VERSION: "open-release/juniper.master"
+NOTIFIER_VERSION: "open-release/juniper.master"
+XQUEUE_VERSION: "open-release/juniper.master"
+CERTS_VERSION: "open-release/juniper.master"
+DEMO_VERSION: "open-release/juniper.master"
 
 mysql_host: "localhost"
 worker_host: "127.0.0.1"
