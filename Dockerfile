@@ -1,6 +1,11 @@
 FROM python:2
 
-RUN pip install ansible==2.7.12 datadog zabbix-api && rm -rf ~/.cache
+RUN pip install ansible==2.7.12 \
+    datadog \
+    PyYAML==3.12 \
+    zabbix-api \
+    mysqlclient \
+    && rm -rf ~/.cache
 
 RUN adduser --system --home /home/ansible --disabled-password  --group ansible
 
