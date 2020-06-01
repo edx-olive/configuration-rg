@@ -34,7 +34,7 @@
 
 - name: render app config with jwt signature to yaml file
   template:
-    src: roles/jwt_signature/templates/app_config.yml.j2
+    src: app_config.yml.j2
     dest: "{{ app_config_file }}"
     owner: "{{ app_config_owner }}"
     group: "{{ app_config_group }}"
