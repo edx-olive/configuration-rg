@@ -16,8 +16,7 @@ build-base-image:
         - docker push $BASE_IMAGE
         - echo image built - $BASE_IMAGE
     only:
-        - juniper.rc2
-        - juniper.rc2-rg-v0.0.2
+        - juniper-rg
 
 # version tag template: release-rg-v.X.Y.Z
 build-version-image:
