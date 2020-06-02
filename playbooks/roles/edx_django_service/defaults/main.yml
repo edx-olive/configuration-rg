@@ -257,3 +257,7 @@ edx_django_service_enable_experimental_docker_shim: false
 edx_django_service_docker_run_command_make_migrate: ""
 edx_django_service_docker_run_command_make_static: ""
 edx_django_service_docker_image_name: 'openedx/{{ edx_django_service_name }}'
+
+edx_django_service_superuser_username: ''
+edx_django_service_superuser_email: 'staff@example.com'
+edx_django_service_superuser_password: 'password'
