@@ -2,8 +2,6 @@
 #
 # single server install
 #
-#- include_vars: ~/playbooks/roles/backup-duplicity/defaults/main.yml
-#- include_vars: ~/playbooks/roles/forum/defaults/main.yml
 
 - import_role:
     name: python
