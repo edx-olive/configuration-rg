@@ -4,6 +4,13 @@
       try_files /$file =404;
   }
 
+{% if ONESIGNAL_APP_ID %}
+    location ~ ^/(?P<file>OneSignal.*\.js) {
+        root {{ edxapp_data_dir }}staticfiles;
+        try_files /$file =404;
+    }
+{% endif %}
+
   location ~ ^/static/(?P<file>.*) {
     root {{ edxapp_data_dir }};
     try_files /staticfiles/$file /course_static/$file =404;
