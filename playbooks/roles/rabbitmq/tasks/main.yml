@@ -57,6 +57,7 @@
     state: present
     force: yes
     update_cache: yes
+  register: install_rabbitmq
   when: installed_version.stdout is defined and installed_version.stdout == "not installed"
   tags:
     - "install"
@@ -66,6 +67,7 @@
   service:
     name: rabbitmq-server
     state: stopped
+  when: install_rabbitmq.changed
   tags:
     - "install"
     - "install:app-configuration"
@@ -73,7 +75,8 @@
 # In case there are lingering processes, ignore errors
 # silently
 - name: Send sigterm to any running rabbitmq processes
-  shell: "pkill -u rabbitmq || true"
+  shell: "(pkill -u rabbitmq; epmd -kill) || true"
+  when: install_rabbitmq.changed
   tags:
     - "install"
     - "install:app-configuration"
@@ -187,6 +190,7 @@
     owner: root
     group: root
     mode: "0644"
+  register: env_configuration
   tags:
     - "install"
     - "install:app-configuration"
@@ -208,6 +212,22 @@
     names: "{{ item }}"
     state: enabled
   with_items: "{{ rabbitmq_plugins }}"
+  tags:
+    - "install"
+    - "install:app-configuration"
+
+- name: Stop rabbit cluster
+  service:
+    name: rabbitmq-server
+    state: stopped
+  when: erlang_cookie.changed or cluster_configuration.changed or env_configuration.changed or rabbitmq_refresh
+  tags:
+    - "install"
+    - "install:app-configuration"
+
+- name: Send sigterm to any running rabbitmq processes
+  shell: "(pkill -u rabbitmq; epmd -kill) || true"
+  when: erlang_cookie.changed or cluster_configuration.changed or env_configuration.changed or rabbitmq_refresh
   tags:
     - "install"
     - "install:app-configuration"
