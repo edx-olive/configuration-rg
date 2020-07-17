@@ -1,0 +1,14 @@
+---
+edxapp_user: edxapp
+update_cms_assets: false
+edxapp_app_dir: "{{ COMMON_APP_DIR }}/edxapp"
+edxapp_code_dir: "{{ edxapp_app_dir }}/edx-platform"
+edxapp_venvs_dir: "{{ edxapp_app_dir }}/venvs"
+edxapp_venv_dir: "{{ edxapp_venvs_dir }}/edxapp"
+edxapp_venv_bin: "{{ edxapp_venv_dir }}/bin"
+supervisor_app_dir: "{{ COMMON_APP_DIR }}/supervisor"
+supervisor_venvs_dir: "{{ supervisor_app_dir }}/venvs"
+supervisor_venv_dir: "{{ supervisor_venvs_dir }}/supervisor"
+supervisor_venv_bin: "{{ supervisor_venv_dir }}/bin"
+supervisor_ctl: "{{ supervisor_venv_bin }}/supervisorctl"
+supervisor_cfg: "{{ supervisor_app_dir }}/supervisord.conf"
