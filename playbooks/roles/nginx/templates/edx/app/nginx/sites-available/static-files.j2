@@ -4,7 +4,7 @@
       try_files /$file =404;
   }
 
-{% if ONESIGNAL_APP_ID|default('False')|bool %}
+{% if ONESIGNAL_APP_ID is defined and ONESIGNAL_APP_ID|length %}
     location ~ ^/(?P<file>OneSignal.*\.js) {
         root {{ edxapp_data_dir }}staticfiles;
         try_files /$file =404;
