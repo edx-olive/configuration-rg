@@ -6,6 +6,7 @@ from sys import argv
 import ConfigParser
 import os
 import time
+from datetime import datetime
 
 user = 'root'
 password = ''
@@ -18,6 +19,8 @@ if os.path.exists(touchfile):
    lastcheck = int(os.stat(touchfile).st_mtime)
 else:
    lastcheck = time.time() - 600;
+
+lastcheck = datetime.utcfromtimestamp(lastcheck)
 
 if os.path.exists(touchfile):
     os.utime(touchfile, None)
@@ -37,16 +40,17 @@ if host == '127.0.0.1': # special for OpenEdx
     host = 'localhost'
 
 try:
-    query = 'SELECT COUNT(*) FROM {database}.auth_user WHERE last_login>FROM_UNIXTIME({lastcheck})'.format(database=database,lastcheck=lastcheck)
-
     client = MySQLdb.connect(host=host, port=port, user=user, passwd=password, connect_timeout=3)
     cursor = client.cursor()
-    cursor.execute(query, None)
-    row = cursor.fetchone()
-    if row and len(row):
-        print row[len(row)-1]
-    else:
-        print "Failed: No such item ({})".format(item)
+
+    query = 'SELECT student_id FROM {database}.courseware_studentmodule WHERE modified>"{lastcheck}" GROUP BY student_id'.format(database=database,lastcheck=lastcheck)
+    num_rows_module = cursor.execute(query, None)
+
+    query = 'SELECT last_login FROM {database}.auth_user WHERE last_login>"{lastcheck}"'.format(database=database,lastcheck=lastcheck)
+    num_rows_loggedin = cursor.execute(query, None)
+
+    print num_rows_module + num_rows_loggedin
+
     cursor.close()
     client.close()
 
