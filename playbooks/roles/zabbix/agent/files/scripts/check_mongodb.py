@@ -17,14 +17,16 @@ use_ssl = False
 config = ConfigParser.SafeConfigParser( { 'host': host, 'port': str(port), 'user': user, 'password': password, 'database': database, 'replica_name': replica_name, 'use_ssl': use_ssl} )
 if config.read(os.path.dirname(os.path.realpath(__file__)) + '/scripts.cfg'):
 
-    user = config.get('mongo', 'user')
-    password = config.get('mongo', 'password')
-    database = config.get('mongo', 'database')
-    host = config.get('mongo', 'host')
-    port = config.getint('mongo', 'port')
-    replica_name = config.get('mongo', 'replica_name')
-    use_ssl = config.getboolean('mongo', 'use_ssl')
-
+    try:
+       user = config.get('mongo', 'user')
+       password = config.get('mongo', 'password')
+       database = config.get('mongo', 'database')
+       host = config.get('mongo', 'host')
+       port = config.getint('mongo', 'port')
+       replica_name = config.get('mongo', 'replica_name')
+       use_ssl = config.getboolean('mongo', 'use_ssl')
+    except ValueError:
+       pass
 
 def responder(array,item):
 

@@ -10,24 +10,67 @@
 # very usefull comments is here
 # 1. all output in bytes
 # 2. doker developers are dope!
-# 3. output will be parsed in zabbix
+# 3. output will be parsed in zabbix server dependent items
+
+if test "$1" = "0" ; then exit 0 ; fi # fake container in zabbix server template (TODO: LLD)
 
 CACHE_DIR="/tmp/zabbix_docker"
 CACHE="${CACHE_DIR}/out"
 mkdir -p ${CACHE_DIR} || exit 1
 chmod o-wrx ${CACHE_DIR}
 
-CACHE_TS=`ls -l --time-style=+%s /tmp/zabbix_docker/out 2> /dev/null | cut -f 6 -d " "`
-NOW=`date +%s`
-CACHE_MOD=`expr 0${NOW} - 0${CACHE_TS}`
+if test -s ${CACHE} ; then
+  if ! CACHE_TS=$(stat -c %Y ${CACHE} 2>/dev/null);
+  then
+    if ! CACHE_TS=$(stat -f %m ${CACHE} 2>/dev/null);
+    then
+      if ! CACHE_TS=$(date -r ${CACHE} +%s 2>/dev/null);
+      then
+        if ! CACHE_TS=$(ls -l --time-style=+%s ${CACHE} 2> /dev/null | cut -f 6 -d " ");
+        then
+          CACHE_TS="999999"
+        fi
+      fi
+    fi
+  fi
+  NOW=`date +%s`
+  CACHE_MOD=`expr 0${NOW} - 0${CACHE_TS}`
+  
+  if test -s ${CACHE} -a ${CACHE_MOD} -le 120 ; then
+    grep "name:$1" ${CACHE}
+    exit 0
+  elif test -s ${CACHE} -a ${CACHE_MOD} -ge 3600 ; then
+    echo "metrics cache expired: ${CACHE}"
+  else
+    grep "name:$1" ${CACHE}
+  fi
 
-if test -n "$1" -a -s ${CACHE} -a 0${CACHE_MOD} -le 60 ; then
+  # calculation of disk usage for huge docker volumes
+  # may lasts more than 30 second (max zabbix script timeout value)
+  # thus will run metrics collector in background
+  
+  if test "$2" != "fork" ; then
+      if ps axw | grep -v grep | grep -v $$ | grep fork | grep -q `basename $0` ; then
+          # another fork is running
+          exit 0
+      fi
+      nohup $0 "$1" fork > /dev/null 2>&1 &
+      exit 0
+  fi
+
+fi
+
+# may be another script is running (or died)
+# wait until temporary file is gone 
+# and then continue with metrics collection anyway
+counter=0; while test -s ${CACHE}.new -a ${counter} -le 90 ; do sleep 1; counter=`expr ${counter} + 1`; done
+
+if test ${counter} -gt 0 -a ${counter} -le 90 ; then
   grep "name:$1" ${CACHE}
   exit 0
-else
-  counter=10; while test -s ${CACHE}.new -a 0${counter} -ge 0 ; do sleep 1; counter=`expr ${counter} - 1`; done
-  echo "# this file was created by $0" > ${CACHE}.new
 fi
+
+echo "# this file was created by $0" > ${CACHE}.new
 
 DISKS_SIZE=`df -k | grep ^/ | awk 'BEGIN { s=0; } { s+=$2; } END { print s*1024; }'`
 CPUS=`cat /proc/cpuinfo | grep ^processor | wc -l`
@@ -38,6 +81,9 @@ sysmem=`grep MemTotal /proc/meminfo | awk '{print $2*1024;}'`
 syscpu=`grep ^cpu" " /proc/stat | awk '{ print ($2 + $3 + $4 + $5 + $6 + $7 + $8)*1000000000/'${CLK_TCK}'+1; }'`
 
 docker ps --no-trunc | grep -v "CONTAINER ID" | awk '{ print $1" "$(NF); }' | while read id name ; do
+
+  # remove linked containers names
+  name=`echo ${name} | cut -d , -f 1`
 
   # memory
   memlimit=`cat /sys/fs/cgroup/memory/docker/${id}/memory.limit_in_bytes`
@@ -67,9 +113,8 @@ docker ps --no-trunc | grep -v "CONTAINER ID" | awk '{ print $1" "$(NF); }' | wh
   cpuusage_percent=`echo | awk '{ printf("%3.2f", ('${cpuusage_delta}' / '${syscpu_delta}' * 100) * '${CPUS}');}'`
 
   # state
-  # fuck!
   inspect=`docker inspect -f 'status:{{ .State.Status }}:pid:{{ .State.Pid }}:mounts:{{ .Mounts }}' ${id}`
-  echo ${inspect} > /tmp/zabbix_docker/${name}_debug
+  # echo ${inspect} > /tmp/zabbix_docker/${name}_debug
 
   status=`echo ${inspect} | cut -f 2 -d :`
   OUT="name:${name} status:${status} memlimit:${memlimit} memused:${memused} memusedpercent:${memused_percent} memfailcnt:${memfailcnt} cpu:${cpuusage_percent}"
@@ -79,17 +124,16 @@ docker ps --no-trunc | grep -v "CONTAINER ID" | awk '{ print $1" "$(NF); }' | wh
   OUT=${OUT}" "`grep eth0 /proc/${container_pid}/net/dev | awk '{ printf("netin:"$2" netout:"$10); }'`
 
   # disk
-  # fuck!
   mounts=`echo ${inspect} | cut -f 6 -d : | sed 's|{|\n{|g' | sed 's|^[^/]*\(/[^ ]*\).*$|\1|' | grep ^/`
   if test -z "${mounts}" ; then
     diskusage="0"
     OUT=${OUT}" diskusage:0"
   else
-    diskusage=`du -sx ${mounts} | sed 's| |\n|g' | awk 'BEGIN { sum=0; } { s+=($1*1024); } END { printf(s); }'`
+    diskusage=`nice du -sx ${mounts} | sed 's| |\n|g' | awk 'BEGIN { sum=0; } { s+=($1*1024); } END { printf(s); }'`
     OUT=${OUT}" diskusage:"${diskusage}
   fi
 
-  echo awk '{ printf("%3.2f", '${diskusage}' / '${DISKS_SIZE}' * 100); }' >> /tmp/zabbix_docker/${name}_debug
+  # echo awk '{ printf("%3.2f", '${diskusage}' / '${DISKS_SIZE}' * 100); }' >> /tmp/zabbix_docker/${name}_debug
   OUT=${OUT}" diskusage_percent:"`echo | awk '{ printf("%3.2f", '${diskusage}' / '${DISKS_SIZE}' * 100); }'`
 
   echo ${OUT} >> ${CACHE}.new
