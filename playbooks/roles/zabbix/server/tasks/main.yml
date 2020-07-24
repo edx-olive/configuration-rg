@@ -39,8 +39,7 @@
 - name: keeping current visible_name
   set_fact:
     zabbix_server_host_visible_name: "{{ host_exists_on_zabbix.stdout }}"
-  when:
-    host_exists_on_zabbix.stdout != ''
+  when: host_exists_on_zabbix.stdout != '' and zabbix_server_host_visible_name == ''
 
 - name: adding Test-Maintenance group for the first install
   set_fact:

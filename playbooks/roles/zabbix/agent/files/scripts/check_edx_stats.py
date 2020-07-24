@@ -48,12 +48,15 @@ try:
     cursor = client.cursor()
 
     for metric, query in queries.items():
-        cursor.execute(query, None)
-        row = cursor.fetchone()
-        if row and len(row):
-            print "{}: {}".format(metric,row[len(row)-1])
-        else:
-            print "Failed: No such item ({})".format(metric)
+        try:
+            cursor.execute(query, None)
+            row = cursor.fetchone()
+            if row and len(row):
+                print "{}: {}".format(metric,row[len(row)-1])
+            else:
+                print "{}: no_such_item".format(metric)
+        except:
+            print "{}: query_failed".format(metric)
 
     cursor.close()
     client.close()
