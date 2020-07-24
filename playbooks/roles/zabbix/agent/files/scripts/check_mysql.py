@@ -29,6 +29,8 @@ def responder(item):
     try:
         if(item == 'Version'):
             query = 'SELECT VERSION()'
+        elif(item == 'max_connections'):
+            query = 'SELECT @@max_connections'
         else:
             query = 'SHOW GLOBAL STATUS WHERE Variable_name="{}"'.format(item)
 
