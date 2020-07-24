@@ -4,12 +4,11 @@
       try_files /$file =404;
   }
 
-{% if EDXAPP_LMS_AUTH_EXTRA.ONESIGNAL_APP_ID is defined and EDXAPP_LMS_AUTH_EXTRA.ONESIGNAL_APP_ID|length %}
+    # OneSignalAPI required this files to be available from web root
     location ~ ^/(?P<file>OneSignal.*\.js) {
         root {{ edxapp_data_dir }}/staticfiles;
         try_files /$file =404;
     }
-{% endif %}
 
   location ~ ^/static/(?P<file>.*) {
     root {{ edxapp_data_dir }};
