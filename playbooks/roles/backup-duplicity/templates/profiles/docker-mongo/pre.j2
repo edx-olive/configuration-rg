@@ -14,13 +14,18 @@ DOCKER_CONTAINER="{{ item[0]['docker-container'] }}"
 DOCKER_CONTAINER=`docker ps | grep mongo | awk '{ print $(NF); }'`
 {% endif %}
 
+{% if item[0]['docker-network'] is defined %}
+DOCKER_NETWORK="{{ item[0]['docker-network'] }}"
+{% else %}
+DOCKER_NETWORK=`docker inspect ${DOCKER_CONTAINER} | grep NetworkMode | cut -f 4 -d '"'`
+{% endif %}
 
 if [ -z "${DATABASES}" ]; then
-    docker run --rm --link ${DOCKER_CONTAINER}:mongo -v "${WORKDIR}":/backup mongo bash -c 'mongodump --out /backup/dump --host mongo:27017'
+    docker run -t --rm --network ${DOCKER_NETWORK} --link ${DOCKER_CONTAINER}:mongo -v "${WORKDIR}":/backup mongo bash -c 'mongodump --out /backup/dump --host mongo:27017'
     DUMP_RETCODE=$?
 else
     for db in ${DATABASES}; do
-        docker run --rm --link ${DOCKER_CONTAINER}:mongo -v "${WORKDIR}":/backup mongo bash -c 'mongodump --db ${db} --out /backup/dump --host mongo:27017'
+        docker run -t --rm --network ${DOCKER_NETWORK} --link ${DOCKER_CONTAINER}:mongo -v "${WORKDIR}":/backup mongo bash -c 'mongodump --db ${db} --out /backup/dump --host mongo:27017'
         RETCODE=$?
         DUMP_RETCODE=`expr 0${DUMP_RETCODE} + ${RETCODE}`
     done

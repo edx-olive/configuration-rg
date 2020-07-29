@@ -3,7 +3,7 @@
 if [ x`whoami` != x{{ backup_runas_user }} ]; then
     if [ x`whoami` = xroot ]; then
         echo "$0: becoming {{ backup_runas_user }}..."
-        su - {{ backup_runas_user }} $0 $*
+        su - -s ${SHELL} {{ backup_runas_user }} $0 $*
         exit
     fi
     echo "Please run this script as {{ backup_runas_user }} user" 1>&2
@@ -63,6 +63,7 @@ if [ ! -x ${DULPY} ]; then
     exit 1
 fi
 
+FTPS_ARGS="{{ '--ssl-no-check-certificate' if (backup_target_method=='ftps' or backup_target_method=='ftpes') else '' }}"
 EXTRA_ARGS=$*
 
 # ########################
@@ -85,11 +86,11 @@ duply_backup () {
 
         echo " " >> ${LOG_FILE}
         echo "=== "`date` === backup ${CONF} >> ${LOG_FILE} 2>&1
-        ${DUPLY} ${CONF_DIR} backup --allow-source-mismatch ${EXTRA_ARGS} 2>&1 | tee ${DUPLY_STATUS_SIZE}.log  >> ${LOG_FILE}
+        ${DUPLY} ${CONF_DIR} backup --allow-source-mismatch ${FTPS_ARGS} ${EXTRA_ARGS} 2>&1 | tee ${DUPLY_STATUS_SIZE}.log  >> ${LOG_FILE}
 
         echo " " >> ${LOG_FILE}
         echo "=== "`date` === purge ${CONF} >> ${LOG_FILE} 2>&1
-        ${DUPLY} ${CONF_DIR} purge --force ${EXTRA_ARGS}  >> ${LOG_FILE} 2>&1
+        ${DUPLY} ${CONF_DIR} purge --force ${FTPS_ARGS} ${EXTRA_ARGS} >> ${LOG_FILE} 2>&1
 
         echo " " >> ${LOG_FILE}
         echo "=== "`date` === writing backup status ${CONF} >> ${LOG_FILE} 2>&1
@@ -114,7 +115,7 @@ duply_backup () {
 
         # calculating diff in days between NOW and LAST_CHAIN DATE
 
-        ${DUPLY} ${CONF_DIR} status > ${DUPLY_STATUS_SIZE}.log 2>&1 
+        ${DUPLY} ${CONF_DIR} status ${FTPS_ARGS} > ${DUPLY_STATUS_SIZE}.log 2>&1
 
         LAST_TS=`grep "Chain end time" ${DUPLY_STATUS_SIZE}.log | cut -f 2- -d : | tail -n 1 | cut -f 2- -d " "`
 
@@ -167,7 +168,7 @@ duply_restore () {
         fi
 
         echo "running: ${DUPLY} ${CONF_DIR} restore ${RESTORE_DIR} ${EXTRA_RESTORE_ARGS}"
-        ${DUPLY} ${CONF_DIR} restore ${RESTORE_DIR} ${EXTRA_RESTORE_ARGS}
+        ${DUPLY} ${CONF_DIR} restore ${RESTORE_DIR} ${FTPS_ARGS} ${EXTRA_RESTORE_ARGS}
 
     done
 }
@@ -182,7 +183,7 @@ duply_status () {
 
         echo " "
         echo "=== duply ${CONF} status: ============================"
-        ${DUPLY} ${CONF_DIR} status ${EXTRA_ARGS}
+        ${DUPLY} ${CONF_DIR} status ${FTPS_ARGS} ${EXTRA_ARGS}
         echo " "
         echo "=== ${CONF} status files: ============================"
         for STATUS in `ls -1 ${DUPLICITY_STATUS}/${CONF}*`; do
