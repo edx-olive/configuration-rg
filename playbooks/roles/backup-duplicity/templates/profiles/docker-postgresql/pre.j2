@@ -13,8 +13,9 @@ DOCKER_CONTAINER="{{ item[0]['docker-container'] }}"
 {% else %}
 DOCKER_CONTAINER=`docker ps | grep postgres | awk '{ print $(NF); }'`
 {% endif %}
+PG_USER={{ item[0]['pg-user'] | default('postgres') }}
 
-docker exec -t "${DOCKER_CONTAINER}" pg_dumpall -c -U postgres > "${WORKDIR}"/dump
+docker exec -t "${DOCKER_CONTAINER}" pg_dumpall -c -U "${PG_USER}" > "${WORKDIR}"/dump
 DUMP_RETCODE=$?
 
 {% for action in item[0]['pre_actions']|default([]) %}

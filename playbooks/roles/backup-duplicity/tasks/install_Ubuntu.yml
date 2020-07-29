@@ -3,10 +3,16 @@
   apt:
     name: "{{ item }}"
   with_items:
-    - "{{ backup_sys_packages[ansible_distribution]['common'] | default([], true) }}"
+    - "{{ backup_sys_packages[ansible_distribution+'_'+ansible_distribution_release] | default(backup_sys_packages[ansible_distribution]['common'], true) | default([], true) }}"
     - "{{ backup_sys_packages[ansible_distribution][backup_target_method] | default([], true) }}"
     - "{{ backup_sys_packages[backup_target_method] | default([], true) }}"
     - "{{ 'gnupg' if backup_gpg_key != 'disabled' else [] }}"
+
+- name: install python2.7 requirements
+  pip:
+    name: [ 'setuptools==33.1.1', 'setuptools-scm==3.4.3', 'pip==19.3.1' ]
+    virtualenv: "{{ backup_venv }}"
+  when: ansible_distribution_release=='xenial'
 
 - name: install python requirements into venv
   pip:

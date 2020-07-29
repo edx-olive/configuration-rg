@@ -10,10 +10,10 @@ if [ ! -d "${WORKDIR}"/dump ]; then
     exit
 fi
 
-HOST = "{{ item[0]['mongo_host'] | default('', true) }}"
-USER = "{{ item[0]['mongo_user'] | default('', true) }}"
-PASS = "{{ item[0]['mongo_password'] | default('', true) }}"
-AUTHDB = "{{ item[0]['mongo_authdb'] | default('', true) }}"
+HOST="{{ item[0]['mongo_host'] | default('', true) }}"
+USER="{{ item[0]['mongo_user'] | default('', true) }}"
+PASS="{{ item[0]['mongo_password'] | default('', true) }}"
+AUTHDB="{{ item[0]['mongo_authdb'] | default('', true) }}"
 DATABASES="{{ item[0]['mongo_databases'] | default([], true) | join(' ') }}"
 
 if [ ! -z ${HOST} ]; then HOST="--host ${HOST}" ; fi

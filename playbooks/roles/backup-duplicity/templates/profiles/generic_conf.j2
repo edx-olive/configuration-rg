@@ -31,7 +31,7 @@ TARGET_USER='{{ backup_target_user }}'
 TARGET_PASS='{{ backup_target_pass }}'
 {% endif %}
 
-SOURCE='{{ item[0]['source'] }}'
+SOURCE='{{ backup_work }}/{{ item[0]['name'] }}'
 
 # Time frame for old backups to keep, Used for the "purge" command.  
 # see duplicity man page, chapter TIME_FORMATS)
