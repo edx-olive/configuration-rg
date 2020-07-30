@@ -2,7 +2,9 @@
 # Do NOT modify this file by hand!
 
 {{ backup_logdir }}/*.log {
-    su duplicity root
+{% if backup_runas_user != 'root' %}
+    su {{ backup_runas_user }} root
+{% endif %}
     compress
     copytruncate
     notifempty

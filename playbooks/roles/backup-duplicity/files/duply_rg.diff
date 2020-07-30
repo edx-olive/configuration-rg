@@ -1,0 +1,52 @@
+--- duply_2.2.1_rg.orig	2020-02-07 11:40:29.000000000 +0200
++++ duply_2.2.1_rg	2020-02-07 11:53:33.000000000 +0200
+@@ -534,8 +534,8 @@
+ function set_config { # sets global config vars
+   local CONFHOME_COMPAT="$HOME/.ftplicity"
+   local CONFHOME="$HOME/.duply"
+-  local CONFHOME_ETC_COMPAT="/etc/ftplicity"
+-  local CONFHOME_ETC="/etc/duply"
++  local CONFHOME_ETC="/etc/duplicity"
++  local CONFHOME="/etc/duplicity"
+ 
+   # confdir can be delivered as path (must contain /)
+   if [ `echo $FTPLCFG | grep /` ] ; then 
+@@ -2257,6 +2257,14 @@
+ 
+ # issue some warnings
+ case "$TARGET_URL_PROT_lowercase" in
++  's3'|'s3+http')
++    BACKEND_PARAMS="AWS_ACCESS_KEY_ID='${TARGET_URL_USER}' AWS_SECRET_ACCESS_KEY='${TARGET_URL_PASS}'"
++    BACKEND_URL="${TARGET_URL_PROT}${TARGET_URL_HOSTPATH}"
++    ;;
++  'azure'|'azure+http')
++    BACKEND_PARAMS="AZURE_ACCOUNT_NAME='${TARGET_URL_USER}' AZURE_ACCOUNT_KEY='${TARGET_URL_PASS}'"
++    BACKEND_URL="${TARGET_URL_PROT}${TARGET_URL_HOSTPATH}"
++    ;;
+   'cf+http')
+     # info on missing AUTH_URL
+     if ! var_isset 'CLOUDFILES_AUTHURL'; then
+@@ -2287,6 +2295,14 @@
+ # for sec�rity reasons, we url_encode username to protect special chars
+ # first sortout backends with special ways to handle password
+ case "$TARGET_URL_PROT_lowercase" in
++  's3'|'s3+http')
++    BACKEND_PARAMS="AWS_ACCESS_KEY_ID='${TARGET_URL_USER}' AWS_SECRET_ACCESS_KEY='${TARGET_URL_PASS}'"
++    BACKEND_URL="${TARGET_URL_PROT}${TARGET_URL_HOSTPATH}"
++    ;;
++  'azure'|'azure+http')
++    BACKEND_PARAMS="AZURE_ACCOUNT_NAME='${TARGET_URL_USER}' AZURE_ACCOUNT_KEY='${TARGET_URL_PASS}'"
++    BACKEND_URL="${TARGET_URL_PROT}${TARGET_URL_HOSTPATH}"
++    ;;
+   'imap'|'imaps')
+     var_isset 'TARGET_URL_PASS' && BACKEND_PARAMS="IMAP_PASSWORD=$(qw "${TARGET_URL_PASS}")"
+     ;;
+@@ -2297,7 +2313,7 @@
+     ;;
+ esac
+ # insert url encoded username into target url if needed
+-if var_isset 'TARGET_URL_USER' && [ "$TARGET_URL_PROT_lowercase" != "file" ]; then
++if var_isset 'TARGET_URL_USER' && [ "$TARGET_URL_PROT_lowercase" != "file" ] && [ "$TARGET_URL_PROT_lowercase" != "azure" ]; then
+   BACKEND_URL="${TARGET_URL_PROT}$(url_encode "${TARGET_URL_USER}")@${TARGET_URL_HOSTPATH}"
+ else
+   BACKEND_URL="$TARGET"

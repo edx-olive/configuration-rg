@@ -14,16 +14,17 @@ USER="{{ item[0]['pg_user'] | default('', true) }}"
 PASS="{{ item[0]['pg_password'] | default('', true) }}"
 DATABASES="{{ item[0]['pg_databases'] | default([], true) | join(' ') }}"
 
-if [ ! -z ${HOST} ]; then HOST="--host=${HOST}" ; else PGDUMP="sudo -u postgres pg_dump"; fi
+if [ -z "${DATABASES}" ]; then PGDUMP="pg_dumpall" ; fi
+if [ ! -z ${HOST} ]; then HOST="--host=${HOST}" ; else PGDUMP="sudo -u postgres ${PGDUMP}"; fi
 if [ ! -z ${USER} ]; then USER="--username=${USER}" ; fi
 if [ ! -z ${PASS} ]; then PGPASSWORD="${PASS}" ; export PGPASSWORD; fi
 
 if [ -z "${DATABASES}" ]; then
-    ${PGDUMP} -c ${USER} ${HOST} --file="${WORKDIR}"/dump
+    ${PGDUMP} -c ${USER} ${HOST} > "${WORKDIR}"/dump
     DUMP_RETCODE=$?
 else
     for db in ${DATABASES}; do
-        ${PGDUMP} -c ${USER} ${HOST} --dbname=${db} --file="${WORKDIR}"/dump
+        ${PGDUMP} -c ${USER} ${HOST} --dbname=${db} >> "${WORKDIR}"/dump
         DUMP_RETCODE=`expr 0${DUMP_RETCODE} + ${RETCODE}`
     done
 fi

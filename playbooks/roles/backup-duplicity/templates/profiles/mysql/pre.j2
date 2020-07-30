@@ -19,12 +19,12 @@ chmod og-wrx "${WORKDIR}"/.my.cnf
 
 DATABASES="{{ item[0]['mysql_databases'] | default([], true) | join(' ') }}"
 if [ -z "${DATABASES}" ]; then
-    DATABASES="--all-databases"
+    DATABASES="--databases "$(mysqldump --defaults-file="${WORKDIR}"/.my.cnf --skip-lock-tables --all-databases --no-data | grep ^USE | cut -f 2 -d '`' | sort | uniq | grep -v '^sys$')
 else
     DATABASES="--databases ${DATABASES}"
 fi
 
-mysqldump --defaults-extra-file="${WORKDIR}"/.my.cnf --opt --skip-lock-tables --skip-extended-insert --max_allowed_packet=4194304 -C ${DATABASES} > "${WORKDIR}"/dump
+mysqldump --defaults-file="${WORKDIR}"/.my.cnf --opt --skip-lock-tables --skip-extended-insert --max_allowed_packet=4194304 -C ${DATABASES} > "${WORKDIR}"/dump
 DUMP_RETCODE=$?
 
 {% for action in item[0]['pre_actions']|default([]) %}

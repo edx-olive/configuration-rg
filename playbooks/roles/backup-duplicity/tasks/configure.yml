@@ -1,13 +1,14 @@
 ---
 - name: include edx-defaults vars
   include_vars: "inventories/edx-defaults/edx-rg-backups.yml"
-  when: not backup_profiles is defined or backup_profiles | list | length == 1 or not edx_backup_duplicity_profiles is defined
+  when: (not backup_profiles is defined or backup_profiles | list | length == 1) and not edx_backup_duplicity_profiles is defined
 
-- name: ensure for backup user is exists
+- name: ensure backup user is exists
   user:
     name: "{{ backup_user }}"
+    home: "{{ backup_home }}"
 
-- name: ensure for backup directories is exits
+- name: ensure backup directories is exits
   file:
     path: "{{ item }}"
     state: directory
@@ -17,6 +18,15 @@
   - "{{ backup_home }}"
   - "{{ backup_work }}"
   - "{{ backup_logdir }}"
+  - "{{ backup_home }}/.ssh"
+
+- name: create known_hosts file for scp and sftp backup_targets
+  file:
+    path: "{{ backup_home }}/.ssh/known_hosts"
+    state: touch
+    mode: 0600
+    owner: "{{ backup_user }}"
+  when: backup_target_method == "scp" or backup_target_method == "sftp"
 
 - name: creating world readable status directory
   file:
@@ -40,6 +50,13 @@
     firstmatch: yes
     state: present
 
+- name: patching duplicity with default python
+  lineinfile:
+    path: "{{ backup_venv }}/bin/duplicity"
+    regexp: "^#!/usr/bin/env python.*$"
+    line: "#!/usr/bin/env python"
+    state: present
+
 - name: patching duplicity for AWS_DEFAULT_REGION
   command: "find {{ backup_venv }} -path '*/backends/_boto_single.py'"
   register: _boto_single
@@ -47,7 +64,7 @@
 - name: patching duplicity for AWS_DEFAULT_REGION
   lineinfile:
     path: "{{ _boto_single.stdout }}"
-    regexp: "^( *)self.my_location = ''$"
+    regexp: "^( *)self.my_location = u*''$"
     line: "\\1self.my_location = os.environ.get('AWS_DEFAULT_REGION', '')"
     backrefs: yes
     state: present
@@ -71,7 +88,7 @@
     state: directory
     mode: 0700
     owner: "{{ backup_user }}"
-  no_log: true
+  no_log: "{{ backup_no_log }}"
   with_items: "{{ backup_profiles }}"
 
 - name: configure profiles
@@ -79,7 +96,7 @@
     src: "profiles/{{ item[0]['type'] }}/{{ item[1] }}.j2"
     dest: "{{ backup_home }}/{{ item[0]['name'] }}/{{ item[1] }}"
     owner: "{{ backup_user }}"
-  no_log: true
+  no_log: "{{ backup_no_log }}"
   with_nested:
     - "{{ backup_profiles }}"
     - ['conf', 'exclude', 'pre', 'post', 'restore']
@@ -89,7 +106,7 @@
     state: directory
     path: "{{ backup_work }}/{{ item.name }}"
     owner: "{{ backup_user }}"
-  no_log: true
+  no_log: "{{ backup_no_log }}"
   with_items: "{{ backup_profiles }}"
 
 - name: create directories
@@ -140,6 +157,7 @@
   become_user: "{{ backup_runas_user }}"
   register: gpg_import
   failed_when: gpg_import.rc == 1
+  when: backup_gpg_key != 'disabled'
 
 - name: GPG removing temp files
   file:
