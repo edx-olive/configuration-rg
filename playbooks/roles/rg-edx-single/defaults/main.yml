@@ -1,0 +1,33 @@
+---
+slack_off: False
+
+vault_zabbix_api_password: !!null
+vault_zabbix_api_login: !!null
+
+vault_elastic_web_passwd: !!null
+
+# backup stub variables
+
+backup_enabled: false
+
+edx_backup_duplicity_profiles:
+  - name: 'mysql'
+    type: 'mysql'
+    mysql_user: '{{ COMMON_MYSQL_READ_ONLY_USER }}'
+    mysql_password: '{{ COMMON_MYSQL_READ_ONLY_PASS }}'
+    mysql_host: '{{ EDXAPP_MYSQL_HOST | default("127.0.0.1") }}'
+
+  - name: 'mongo'
+    type: 'mongo'
+    mongo_user: '{{ MONGO_ADMIN_USER | default("admin") }}'
+    mongo_password: '{{ MONGO_ADMIN_PASSWORD }}'
+    mongo_authdb: 'admin'
+    mongo_host: '{{ EDXAPP_MONGO_HOSTS | default("127.0.0.1") }}'
+
+backup_duplicity:
+  target: !!null
+  target_method: !!null
+  target_user: !!null
+  target_pass: !!null
+  profiles: {}
+backup_target_method_default: !!null
