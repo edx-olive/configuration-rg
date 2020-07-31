@@ -9,6 +9,7 @@
       net.core.netdev_max_backlog: 250000
       net.ipv4.ip_local_port_range: "10240 65000"
       net.ipv4.conf.all.send_redirects: 0
+      net.core.somaxconn: 4096
 
 - include_vars: ~/vault/rg-slack-token.yml
 - include_vars: ~/vault/roles/zabbix/zabbix-rg-api.yml
@@ -16,8 +17,7 @@
 - name: applying fix for mysql timezone information
   shell: "mysql_tzinfo_to_sql /usr/share/zoneinfo | sed -e 's/Local time zone must be set--see zic manual page/local/' | mysql -u root mysql"
   when: EDXAPP_MYSQL_HOST == 'localhost' or EDXAPP_MYSQL_HOST == '127.0.0.1'
-  become: true
-  become_method: 'sudo'
+  ignore_errors: True
   tags:
     - mysql_tzinfo_to_sql
 
@@ -27,15 +27,11 @@
     value: "{{ item.value }}"
   with_dict: "{{ sysctl_settings }}"
   ignore_errors: true
-  become: true
-  become_method: 'sudo'
 
 - name: disabling email spam from cron about ubuntu upgrade
   file:
     path: "{{ item }}"
     state: absent
-  become: true
-  become_method: 'sudo'
   with_items:
     - "/etc/cron.daily/update-notifier-common"
     - "/etc/cron.weekly/update-notifier-common"
@@ -44,15 +40,11 @@
   file:
     path: "/tmp/mako_lms"
     state: absent
-  become: true
-  become_method: 'sudo'
 
 - name: removing /tmp/mako_cms directory
   file:
     path: "/tmp/mako_cms"
     state: absent
-  become: true
-  become_method: 'sudo'
 
 - name: get visible names for zabbix hosts which names starts with {{ EDXAPP_LMS_BASE }}
   shell: "python ~/playbooks/roles/zabbix/server/files/get_visiblename.py {{ EDXAPP_LMS_BASE | default(inventory_hostname, true) }}"
@@ -89,6 +81,9 @@
     msg: "AWX: {{ project_name }} {{ env }} updated. {{ EDXAPP_LMS_BASE }}"
     icon_url: "https://awx.raccoongang.com/favicon.ico"
     username: "AWX"
+    color: "good"
   with_items: "{{ slack_notification_channels[env] }}"
-  when: slack_notification_channels is defined and slack_notification_channels[env] is defined and slack_notification_channels[env] != ''
+  when: not slack_off and slack_notification_channels is defined and slack_notification_channels[env] is defined and slack_notification_channels[env] != ''
   delegate_to: localhost
+  become: False
+  run_once: True

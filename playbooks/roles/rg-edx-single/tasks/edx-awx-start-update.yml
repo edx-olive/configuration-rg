@@ -11,7 +11,6 @@
   register: hosts
   when: zabbix_enabled
   delegate_to: localhost
-  become: False
   tags:
     - skip_ansible_lint
 
@@ -29,17 +28,21 @@
   delegate_to: localhost
   become: False
 
-- name: Update expired rabbitmq repo key
-  shell: "curl -L https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey | apt-key add -"
-  args:
-    warn: False
-  become: True
+- name: Check for expired apt keys
+  shell: "apt-key list | grep expired: | cat"
+  register: ppa_key_status
 
-- name: Update expired edX PPA repo key
-  shell: "apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 69464050"
+- name: Update known expired repo keys
+  shell: "{{ item }}"
   args:
     warn: False
   become: True
+  with_items:
+    - 'curl -L https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey | apt-key add -'
+    - 'apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 69464050'
+    - 'curl -L https://www.mongodb.org/static/pgp/server-3.2.asc | apt-key add -'
+    - 'curl https://packages.elastic.co/GPG-KEY-elasticsearch | apt-key add -'
+  when: "'expired' in ppa_key_status.stdout"
 
 - name: HotFix for server_names_hash_bucket_size
   stat: path=/etc/nginx/nginx.conf
@@ -51,8 +54,6 @@
     regexp: '^server_names_hash_bucket_size'
     state: absent
   when: nginx_conf.stat.exists
-  become: true
-  become_user: root
   ignore_errors: yes
 
 - name: HotFix for server_names_hash_bucket_size
@@ -61,8 +62,6 @@
     regexp: '^server_names_hash_bucket_size'
     state: absent
   when: nginx_conf.stat.exists
-  become: true
-  become_user: root
   ignore_errors: yes
 
 - name: HotFix for server_names_hash_bucket_size
@@ -72,8 +71,6 @@
     line: "        server_names_hash_bucket_size 128;"
     state: present
   when: nginx_conf.stat.exists
-  become: true
-  become_user: root
 
 - name: Sending slack notification
   slack:
@@ -82,6 +79,9 @@
     msg: "AWX: Start updating {{ project_name }} {{ env }}{{ '. Started by: '~awx_user_name if awx_user_name is defined else '' }}{{ ' https://awx.raccoongang.com/#/workflows/'~awx_workflow_job_id if awx_workflow_job_id is defined else '' }}"
     icon_url: "https://awx.raccoongang.com/favicon.ico"
     username: "AWX"
+    color: "warning"
   with_items: "{{ slack_notification_channels[env] }}"
-  when: slack_notification_channels is defined and slack_notification_channels[env] is defined and slack_notification_channels[env] != ''
+  when: not slack_off and slack_notification_channels is defined and slack_notification_channels[env] is defined and slack_notification_channels[env] != ''
   delegate_to: localhost
+  become: False
+  run_once: True
