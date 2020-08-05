@@ -1,0 +1,6 @@
+Base variables for deployment repository
+
+EDXAPP_ENABLE_EDXNOTES: True
+
+EDXAPP_FEATURES_OVERRIDE:
+  ENABLE_EDXNOTES: "{{ EDXAPP_ENABLE_EDXNOTES }}"
