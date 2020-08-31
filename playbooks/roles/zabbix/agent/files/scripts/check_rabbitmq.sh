@@ -6,8 +6,10 @@ if [ "$1" = "status" ]; then
     ST=`${RABBITMQCTL} status 2>&1`
     if echo "${ST}" | grep -q alarms ; then
         echo "${ST}" | grep "alarms,\[\]" | wc -l
-    else
+    elif echo "${ST}" | grep -q "uptime" ; then
         echo "${ST}" | grep "uptime" | wc -l
+    else
+        echo "${ST}" | grep -A 2 "^....Alarms" | grep "(none)" | wc -l
     fi
 
     exit
