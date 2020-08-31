@@ -11,7 +11,6 @@ RUN mkdir .ssh
 
 COPY --chown=ansible bootstrap.sh .
 
-COPY --chown=ansible vault /home/ansible/vault
 COPY --chown=ansible inventory/ /home/ansible/inventory
 COPY --chown=ansible playbooks /home/ansible/playbooks
 
