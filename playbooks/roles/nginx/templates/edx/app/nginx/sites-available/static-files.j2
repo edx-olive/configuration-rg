@@ -4,6 +4,12 @@
       try_files /$file =404;
   }
 
+    # OneSignalAPI required this files to be available from web root
+    location ~ ^/(?P<file>OneSignal.*\.js) {
+        root {{ edxapp_data_dir }}/staticfiles;
+        try_files /$file =404;
+    }
+
   location ~ ^/static/(?P<file>.*) {
     root {{ edxapp_data_dir }};
     try_files /staticfiles/$file /staticfiles-prev/$file /course_static/$file =404;
