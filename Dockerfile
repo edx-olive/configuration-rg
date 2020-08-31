@@ -1,6 +1,6 @@
 FROM python:2
 
-RUN pip install ansible datadog zabbix-api && rm -rf ~/.cache
+RUN pip install ansible datadog zabbix-api && apt update && apt install nano && apt clean && rm -rf ~/.cache
 
 RUN adduser --system --home /home/ansible --disabled-password  --group ansible
 
@@ -11,8 +11,9 @@ RUN mkdir .ssh
 
 COPY --chown=ansible bootstrap.sh .
 
-COPY --chown=ansible playbooks /home/ansible/playbooks
+COPY --chown=ansible vault /home/ansible/vault
 COPY --chown=ansible inventory/ /home/ansible/inventory
+COPY --chown=ansible playbooks /home/ansible/playbooks
 
 ENV ANSIBLE_ROLES_PATH=/home/ansible/playbooks/roles \
     ANSIBLE_CONFIG=/home/ansible/playbooks/ansible.cfg \
