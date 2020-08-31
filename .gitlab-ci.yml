@@ -30,8 +30,8 @@ build-version-image:
         - FULL_VERSION=$BASE_IMAGE
         - MINOR_VERSION=$(echo $FULL_VERSION | sed -n -e "s/\(^.*\)-.*$/\1/p")
         - MAJOR_VERSION=$(echo $MINOR_VERSION | sed -n -e "s/\(^.*\)-.*$/\1/p")
-        - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG || true
-        - docker build --cache-from $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG -t $FULL_VERSION .
+        - docker pull $CI_REGISTRY_IMAGE:$MINOR_VERSION || true
+        - docker build --cache-from $CI_REGISTRY_IMAGE:$MINOR_VERSION -t $FULL_VERSION .
         - docker tag $FULL_VERSION $MINOR_VERSION
         - docker tag $FULL_VERSION $MAJOR_VERSION
         - docker push $FULL_VERSION
