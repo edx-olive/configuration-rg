@@ -11,11 +11,11 @@
 
 - import_role:
     name: mysql
-  when: EDXAPP_MYSQL_HOST == 'localhost' or EDXAPP_MYSQL_HOST == '127.0.0.1' and not ENABLE_MYSQL_VERSION_5_7 | default(False)
+  when: (EDXAPP_MYSQL_HOST == 'localhost' or EDXAPP_MYSQL_HOST == '127.0.0.1') and not ENABLE_MYSQL_VERSION_5_7 | default(False)
 
 - import_role:
     name: mysql_5_7
-  when: EDXAPP_MYSQL_HOST == 'localhost' or EDXAPP_MYSQL_HOST == '127.0.0.1' and ENABLE_MYSQL_VERSION_5_7 | default(False)
+  when: (EDXAPP_MYSQL_HOST == 'localhost' or EDXAPP_MYSQL_HOST == '127.0.0.1') and ENABLE_MYSQL_VERSION_5_7 | default(False)
 
 - import_role:
     name: edxlocal
