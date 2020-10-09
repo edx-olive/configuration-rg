@@ -141,7 +141,7 @@ edx_django_service_databases:
     HOST: '{{ edx_django_service_default_db_host }}'
     PORT: '3306'
     ATOMIC_REQUESTS: '{{ edx_django_service_default_db_atomic_requests }}'
-    CONN_MAX_AGE: '{{ edx_django_service_default_db_conn_max_age }}'
+    CONN_MAX_AGE: 60
     OPTIONS: '{{ edx_django_service_db_options }}'
 
 edx_django_service_social_auth_edx_oauth2_key: '{{ edx_django_service_name }}-sso-key'
