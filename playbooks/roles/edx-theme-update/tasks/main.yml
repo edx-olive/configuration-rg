@@ -1,0 +1,89 @@
+- name:
+  import_role:
+    name: git_clone
+  vars:
+    deploy_user: '{{ themes_deploy_user | default("edxapp", true) }}'
+    COMMON_GIT_PROTOCOL: '{{ THEMES_COMMON_GIT_PROTOCOL | default("https", true) }}'
+    COMMON_GIT_MIRROR: '{{ THEMES_COMMON_GIT_MIRROR | default("github.com", true) }}'
+    COMMON_GIT_PATH: '{{ THEMES_COMMON_GIT_PATH | default("raccoongang", true) }}'
+    COMMON_GIT_REPO: '{{ THEMES_COMMON_GIT_REPO | default("edx-theme", true) }}'
+    repo_dest_dir: '{{ themes_repo_dest_dir | default("/edx/app/edxapp/themes", true) }}'
+    GIT_REPOS: '{{ THEMES_GIT_REPOS | default({}, true) }}'
+
+#
+# this role is copy-paste of tasks from edx-configuration
+# to run just theme update
+#
+- name: checkout edx-platform repo into {{ edxapp_code_dir }}
+  git:
+    dest: "{{ edxapp_code_dir }}"
+    repo: "{{ edx_platform_repo }}"
+    version: "{{ edx_platform_version }}"
+    accept_hostkey: yes
+  become_user: "{{ edxapp_user }}"
+  register: git_res
+
+- name: checkout Stanford-style theme
+  git:
+    dest: "{{ edxapp_app_dir }}/themes/{{ edxapp_theme_name }}"
+    repo: "{{ edxapp_theme_source_repo }}"
+    version: "{{ edxapp_theme_version }}"
+    accept_hostkey: yes
+  when: edxapp_theme_name != ''
+  become_user: "{{ edxapp_user }}"
+
+- name: removing all pyc files in the edx-platform repo
+  shell: "find {{ edxapp_code_dir }}/ -name '*.pyc' -exec rm -f {} \\;"
+  when: git_res.changed
+  become_user: "{{ edxapp_user }}"
+
+- name: compiling all py files in the edx-platform repo
+  shell: "{{ edxapp_venv_bin }}/python -m compileall -q -x .git/.* {{ edxapp_code_dir }}"
+  when: git_res.changed
+  become_user: "{{ edxapp_user }}"
+
+- name: restart edxapp (pre-hwathorn)
+  supervisorctl:
+    name: "edxapp:"
+    supervisorctl_path: "{{ supervisor_ctl }}"
+    config: "{{ supervisor_cfg }}"
+    state: restarted
+  when: git_res.changed
+  ignore_errors: yes
+
+- name: restart edxapp (hawthorn)
+  supervisorctl:
+    name: "lms"
+    supervisorctl_path: "{{ supervisor_ctl }}"
+    config: "{{ supervisor_cfg }}"
+    state: restarted
+  when: git_res.changed
+  ignore_errors: yes
+
+- name: restart edxapp_workers
+  supervisorctl:
+    name: "edxapp_worker:"
+    supervisorctl_path: "{{ supervisor_ctl }}"
+    config: "{{ supervisor_cfg }}"
+    state: restarted
+  when: git_res.changed
+
+# end of copy-paste
+
+- name: execute edxapp-update-assets-lms
+  shell: "/edx/bin/edxapp-update-assets-lms || /edx/bin/edxapp-update-assets"
+
+- name: execute edxapp-update-assets-cms
+  shell: "/edx/bin/edxapp-update-assets-cms || true"
+  when: update_cms_assets
+
+- name: removing /tmp/mako_lms directory
+  file:
+    path: "/tmp/mako_lms"
+    state: absent
+
+- name: removing /tmp/mako_cms directory
+  file:
+    path: "/tmp/mako_cms"
+    state: absent
+
