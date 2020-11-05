@@ -431,7 +431,7 @@
       {{ createsuperuser_out.stderr }}
   when:
     - createsuperuser_out.rc != 0
-    - not "That username is already taken" in createsuperuser_out.stderr
+    - not "already taken" in createsuperuser_out.stderr
 
 - name: Setting superuser password
   expect:
