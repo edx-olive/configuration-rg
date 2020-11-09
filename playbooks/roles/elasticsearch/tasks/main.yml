@@ -80,6 +80,7 @@
   template:
     src: etc/default/elasticsearch.j2 
     dest: /etc/default/elasticsearch
+  register: elasticsearch_default
   tags:
     - install
     - install:configuration
@@ -89,6 +90,7 @@
     src: edx/etc/elasticsearch/elasticsearch.yml.j2 
     dest: "{{ elasticsearch_cfg_dir }}/elasticsearch.yml"
     mode: 0744
+  register: elasticsearch_config
   tags:
     - install
     - install:configuration
@@ -98,6 +100,7 @@
     src: edx/etc/elasticsearch/logging.yml.j2 
     dest: "{{ elasticsearch_cfg_dir }}/logging.yml"
     mode: 0744
+  register: elasticsearch_logging
   tags:
     - install
     - install:configuration
@@ -116,7 +119,7 @@
     name: elasticsearch 
     state: restarted 
     enabled: yes
-  when: elasticsearch_reinstall.changed
+  when: elasticsearch_reinstall.changed or elasticsearch_default.changed or elasticsearch_config.changed or elasticsearch_logging.changed
   tags:
     - manage
     - manage:restart
