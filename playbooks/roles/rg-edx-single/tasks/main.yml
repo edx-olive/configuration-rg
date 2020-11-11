@@ -7,8 +7,9 @@
     name: user_retirement_pipeline
   when: COMMON_RETIREMENT_SERVICE_SETUP
 
-#- import_role:
-#    name: edx-user-attr
+- import_role:
+    name: edx-user-attr
+  tags: [ "edx_user_attr" ]
 
 - import_role:
     name: rg-nginx

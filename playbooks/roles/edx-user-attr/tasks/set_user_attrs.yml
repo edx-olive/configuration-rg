@@ -1,0 +1,28 @@
+---
+
+- name: Creating user {{ item.username }}
+  shell: >
+    . {{ edxapp_app_dir }}/edxapp_env && {{ edxapp_venv_bin }}/python -W ignore ./manage.py lms --settings={{ edxapp_settings }} --service-variant lms
+    manage_user {{ item.username }} {{ item.email }}
+    --unusable-password
+    {% if item.is_staff %}--staff{% endif %}
+    {% if item.is_superuser %}--superuser{% endif %}
+  args:
+    chdir: "{{ edxapp_code_dir }}"
+  tags:
+    - install
+    - install:configuration
+
+- name: Setting password for {{ item.username }}
+  expect:
+    command: >
+      bash -c ". {{ edxapp_app_dir }}/edxapp_env && {{ edxapp_venv_bin }}/python -W ignore ./manage.py lms --settings={{ edxapp_settings }} --service-variant lms
+      changepassword {{ item.username }}"
+    responses:
+      "Password": "{{ item.password }}"
+    timeout: 30
+    chdir: "{{ edxapp_code_dir }}"
+  tags:
+    - install
+    - install:configuration
+
