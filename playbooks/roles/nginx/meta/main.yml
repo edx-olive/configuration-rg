@@ -1,3 +1,4 @@
 ---
 dependencies:
-  - common
+  - role: common
+  - role: common_vars

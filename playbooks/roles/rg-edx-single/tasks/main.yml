@@ -12,35 +12,6 @@
   tags: [ "edx_user_attr" ]
 
 - import_role:
-    name: rg-nginx
-  vars:
-    nginx: yes
-    nginx_ssl: no
-    nginx_letsencrypt: no
-    nginx_letsencrypt_setup: no
-    insights: no
-
-- import_role:
-    name: rg-nginx
-  vars:
-    nginx: no
-    nginx_ssl: no
-    nginx_letsencrypt: yes
-    nginx_letsencrypt_setup: yes
-    insights: no
-  when: use_letsencrypt
-
-- import_role:
-    name: rg-nginx
-  vars:
-    nginx: yes
-    nginx_ssl: yes
-    nginx_letsencrypt: yes
-    nginx_letsencrypt_setup: no
-    insights: no
-  when: use_letsencrypt
-
-- import_role:
     name: filebeat
 
 - include: edx-backup-duplicity.yml
