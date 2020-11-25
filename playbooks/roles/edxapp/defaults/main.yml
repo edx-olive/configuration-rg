@@ -1240,6 +1240,7 @@ edxapp_generic_auth_config:  &edxapp_generic_auth
   ENTERPRISE_SERVICE_WORKER_USERNAME: "{{ EDXAPP_ENTERPRISE_SERVICE_WORKER_USERNAME }}"
   BRANCH_IO_KEY: "{{ EDXAPP_BRANCH_IO_KEY }}"
   PROCTORING_BACKENDS: "{{ EDXAPP_PROCTORING_BACKENDS }}"
+  RG_SENTRY_DSN: "{{ EDXAPP_SENTRY_DSN }}"
 
 generic_cache_config: &default_generic_cache
   BACKEND:  "{{ EDXAPP_CACHE_BACKEND }}"
@@ -1474,6 +1475,7 @@ generic_env_config:  &edxapp_generic_env
   PASSWORD_POLICY_COMPLIANCE_ROLLOUT_CONFIG: "{{ EDXAPP_PASSWORD_POLICY_COMPLIANCE_ROLLOUT_CONFIG }}"
   # Dashboard courses default limit
   DASHBOARD_COURSE_LIMIT: "{{ EDXAPP_DASHBOARD_COURSE_LIMIT }}"
+  RG_SENTRY_ENVIRONMENT: "{{ EDXAPP_SENTRY_ENVIRONMENT }}"
 
 lms_auth_config:
   <<: *edxapp_generic_auth
