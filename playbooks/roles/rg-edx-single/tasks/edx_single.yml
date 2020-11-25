@@ -45,6 +45,8 @@
       - "{{ 'insights' if COMMON_ENABLE_INSIGHTS else '' }}"
     nginx_default_sites:
       - "lms"
+  tags:
+    - nginx
 
 - import_role:
     name: edxapp

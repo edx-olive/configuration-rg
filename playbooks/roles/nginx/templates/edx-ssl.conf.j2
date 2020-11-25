@@ -1,4 +1,3 @@
-{% if nginx_ssl_template %}
 server {
     listen 80 default;
     location /heartbeat {
@@ -72,18 +71,18 @@ server {
     }
 {% if EDXAPP_EDXNOTES_PUBLIC_API is defined and '/edx_notes/' in EDXAPP_EDXNOTES_PUBLIC_API %}
     location /edx_notes {
-      proxy_set_header X-Forwarded-Proto $scheme;
-      proxy_set_header X-Forwarded-Port $server_port;
-      proxy_set_header X-Forwarded-For $remote_addr;
+      proxy_set_header X-Forwarded-Proto {{ '$http_x_forwarded_proto' if NGINX_FORWARDED_FOR_BEHIND_PROXY else '$scheme' }};
+      proxy_set_header X-Forwarded-Port {{ '$http_x_forwarded_port' if NGINX_FORWARDED_FOR_BEHIND_PROXY else '$server_port' }};
+      proxy_set_header X-Forwarded-For {{ '$http_x_forwarded_for' if NGINX_FORWARDED_FOR_BEHIND_PROXY else '$remote_addr' }};
       proxy_set_header Host $http_host;
       proxy_redirect off;
       proxy_pass http://{{ localhost_ip_addr }}:8120/; # mind the slash!
     }
 {% endif %}
     location / {
-      proxy_set_header X-Forwarded-Proto $scheme;
-      proxy_set_header X-Forwarded-Port $server_port;
-      proxy_set_header X-Forwarded-For $remote_addr;
+      proxy_set_header X-Forwarded-Proto {{ '$http_x_forwarded_proto' if NGINX_FORWARDED_FOR_BEHIND_PROXY else '$scheme' }};
+      proxy_set_header X-Forwarded-Port {{ '$http_x_forwarded_port' if NGINX_FORWARDED_FOR_BEHIND_PROXY else '$server_port' }};
+      proxy_set_header X-Forwarded-For {{ '$http_x_forwarded_for' if NGINX_FORWARDED_FOR_BEHIND_PROXY else '$remote_addr' }};
       proxy_set_header Host $http_host;
       proxy_redirect off;
       proxy_pass http://{{ localhost_ip_addr }}:{{ EDXAPP_LMS_NGINX_PORT }};
@@ -91,9 +90,9 @@ server {
 {% if EDXAPP_API_NGINX_ADDITIONAL_LOCATION is defined and EDXAPP_API_NGINX_ADDITIONAL_LOCATION %}
     location /api {
       proxy_read_timeout 600s;
-      proxy_set_header X-Forwarded-Proto $scheme;
-      proxy_set_header X-Forwarded-Port $server_port;
-      proxy_set_header X-Forwarded-For $remote_addr;
+      proxy_set_header X-Forwarded-Proto {{ '$http_x_forwarded_proto' if NGINX_FORWARDED_FOR_BEHIND_PROXY else '$scheme' }};
+      proxy_set_header X-Forwarded-Port {{ '$http_x_forwarded_port' if NGINX_FORWARDED_FOR_BEHIND_PROXY else '$server_port' }};
+      proxy_set_header X-Forwarded-For {{ '$http_x_forwarded_for' if NGINX_FORWARDED_FOR_BEHIND_PROXY else '$remote_addr' }};
       proxy_set_header Host $http_host;
       proxy_redirect off;
       proxy_pass http://{{ localhost_ip_addr }}:18000;
@@ -164,9 +163,9 @@ server {
     }
 
     location / {
-      proxy_set_header X-Forwarded-Proto $scheme;
-      proxy_set_header X-Forwarded-Port $server_port;
-      proxy_set_header X-Forwarded-For $remote_addr;
+      proxy_set_header X-Forwarded-Proto {{ '$http_x_forwarded_proto' if NGINX_FORWARDED_FOR_BEHIND_PROXY else '$scheme' }};
+      proxy_set_header X-Forwarded-Port {{ '$http_x_forwarded_port' if NGINX_FORWARDED_FOR_BEHIND_PROXY else '$server_port' }};
+      proxy_set_header X-Forwarded-For {{ '$http_x_forwarded_for' if NGINX_FORWARDED_FOR_BEHIND_PROXY else '$remote_addr' }};
       proxy_set_header Host $http_host;
       proxy_redirect off;
       proxy_pass http://{{ localhost_ip_addr }}:{{ EDXAPP_CMS_NGINX_PORT }};
@@ -254,9 +253,9 @@ server {
     {% endif %}
 
     location / {
-      proxy_set_header X-Forwarded-Proto $scheme;
-      proxy_set_header X-Forwarded-Port $server_port;
-      proxy_set_header X-Forwarded-For $remote_addr;
+      proxy_set_header X-Forwarded-Proto {{ '$http_x_forwarded_proto' if NGINX_FORWARDED_FOR_BEHIND_PROXY else '$scheme' }};
+      proxy_set_header X-Forwarded-Port {{ '$http_x_forwarded_port' if NGINX_FORWARDED_FOR_BEHIND_PROXY else '$server_port' }};
+      proxy_set_header X-Forwarded-For {{ '$http_x_forwarded_for' if NGINX_FORWARDED_FOR_BEHIND_PROXY else '$remote_addr' }};
       proxy_set_header Host $http_host;
       proxy_redirect off;
       proxy_pass http://{{ localhost_ip_addr }}:{{ service.nging_proxy_pass_port }};
@@ -273,4 +272,3 @@ server {
 }
  {% endfor %}
  {% endif %}
-{% endif %}

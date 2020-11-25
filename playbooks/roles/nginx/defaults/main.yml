@@ -200,6 +200,7 @@ nginx_config: "edx-http.conf"
 nginx_config_path: "{{ nginx_app_dir }}/edx-template-{{ nginx_config }}"
 
 NGINX_ADDITIONAL_HEADERS: []
+NGINX_FORWARDED_FOR_BEHIND_PROXY: false
 
 NGINX_ROBOT_RULES:
   - agent: '*'
