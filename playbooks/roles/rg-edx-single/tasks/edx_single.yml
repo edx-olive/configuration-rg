@@ -13,9 +13,11 @@
 - import_role:
     name: mysql
   when: EDXAPP_MYSQL_HOST == 'localhost' or EDXAPP_MYSQL_HOST == '127.0.0.1'
+  tags: [ "mysql" ]
 
 - import_role:
     name: edxlocal
+  tags: [ "mysql" ]
 
 - import_role:
     name: memcache
@@ -45,8 +47,7 @@
       - "{{ 'insights' if COMMON_ENABLE_INSIGHTS else '' }}"
     nginx_default_sites:
       - "lms"
-  tags:
-    - nginx
+  tags: [ "nginx" ]
 
 - import_role:
     name: edxapp
