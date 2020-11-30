@@ -9,4 +9,4 @@
   {%- endfor %}
 {%- endif %}
 
-{{ edx_service_config | to_nice_yaml }}
+{{ edx_service_config | combine(edx_service_config_common, recursive=True) | to_nice_yaml }}

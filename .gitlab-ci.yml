@@ -19,6 +19,10 @@ build-base-image:
         - juniper-rg
 
 # version tag template: release-rg-v.X.Y.Z
+#
+# image MUST be build using '-develop' image as cache
+# this will eliminate possibility of Ansible upgrade
+# in process of stable image creation
 build-version-image:
     stage: build
     variables:
@@ -27,7 +31,8 @@ build-version-image:
         - FULL_VERSION=$BASE_IMAGE
         - MINOR_VERSION=$(echo $FULL_VERSION | sed -n -e "s/\(^.*\)-.*$/\1/p")
         - MAJOR_VERSION=$(echo $MINOR_VERSION | sed -n -e "s/\(^.*\)-.*$/\1/p")
-        - docker build -t $FULL_VERSION .
+        - docker pull $CI_REGISTRY_IMAGE:juniper-rg-develop || true
+        - docker --cache-from $CI_REGISTRY_IMAGE:juniper-rg-develop build -t $FULL_VERSION .
         - docker tag $FULL_VERSION $MINOR_VERSION
         - docker tag $FULL_VERSION $MAJOR_VERSION
         - docker push $FULL_VERSION

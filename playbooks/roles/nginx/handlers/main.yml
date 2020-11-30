@@ -1,8 +1,14 @@
----
+- name: force restart nginx
+  shell: "killall -9 -r -w nginx && /etc/init.d/nginx restart"
+
+- name: test nginx config
+  command: "/usr/sbin/nginx -t"
+
 - name: restart nginx
   service:
     name: nginx
     state: restarted
+    enabled: yes
 
 - name: reload nginx
   service:
