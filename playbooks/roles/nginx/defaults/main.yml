@@ -210,6 +210,7 @@ htpasswd_enabled: False
 htpasswd_services: []
 
 le_packages:
+    - snapd
     - augeas-doc
     - augeas-tools
     - libssl-dev
