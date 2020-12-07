@@ -46,8 +46,20 @@
         le_cert_exists: "{{ le_cert_exists1 if nginx_edx_config else le_cert_exists2 }}"
 
     - name: Installing certbot dependencies
-      apt: name="{{ item }}" update_cache=yes
-      with_items: "{{ le_packages }}"
+      apt:
+        name: "{{ le_packages }}"
+        update_cache: True
+
+    # https://certbot.eff.org/lets-encrypt/ubuntuxenial-other
+
+    - name: Installing certbot via snap
+      command: snap install --classic certbot
+
+    - name: Symlinking /snap/bin/certbot /usr/bin/certbot
+      file:
+        src: /snap/bin/certbot
+        dest: /usr/bin/certbot
+        state: link
 
     - name: Creating check directory for nginx
       file:
@@ -56,16 +68,6 @@
         mode: 0755
         owner: www-data
         group: www-data
-
-    - name: Installing certbot
-      get_url:
-        url: https://dl.eff.org/certbot-auto
-        dest: /usr/local/bin/certbot-auto
-        mode: 0755
-
-    - name: Performing post-installation setup
-      command: /usr/local/bin/certbot-auto --non-interactive --text --os-packages-only
-      when: le_cert_exists.stat.islnk is not defined
 
     - name: Compare LETSENCRYPT_MAIN_DOMAIN with LMS, CMS and PREVIEW
       set_fact:
@@ -81,7 +83,7 @@
       when: not nginx_edx_config
 
     - name: Requesting for LMS, CMS and LETSENCRYPT_ADDITIONAL_DOMAIN certificates
-      command: /usr/local/bin/certbot-auto certonly --agree-tos --non-interactive --text --rsa-key-size 2048 --webroot -w /var/www/letsencrypt -d {{ LETSENCRYPT_ALL_DOMAIN|join(' -d ') }}  --register-unsafely-without-email --force-renewal
+      command: certbot certonly --agree-tos --non-interactive --text --rsa-key-size 2048 --webroot -w /var/www/letsencrypt -d {{ LETSENCRYPT_ALL_DOMAIN|join(' -d ') }}  --register-unsafely-without-email --force-renewal
       when: le_cert_exists.stat.islnk is not defined
 
     - name: Create certbot log directory
@@ -103,7 +105,7 @@
         minute: "1"
         hour: "1"
         month: "*"
-        job: '/usr/local/bin/certbot-auto renew --webroot -w {{ letsencrypt_webroot }} --post-hook "service nginx restart" >> /var/log/letsencrypt/crontab.log 2>&1'
+        job: 'certbot renew --webroot -w {{ letsencrypt_webroot }} --post-hook "service nginx restart" >> /var/log/letsencrypt/crontab.log 2>&1'
 
     - name: set lms_ssl_certificate_path fact
       set_fact:
