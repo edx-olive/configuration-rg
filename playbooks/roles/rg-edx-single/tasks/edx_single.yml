@@ -117,6 +117,11 @@
     name: oauth_client_setup
 
 - import_role:
+    name: rg_gamma
+  when: COMMON_ENABLE_GAMMA
+  tags: [ "rg_gamma" ]
+
+- import_role:
     name: filebeat
   vars:
     filebeat_enable: "{{ COMMON_ENABLE_FILEBEAT }}"
