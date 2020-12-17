@@ -1,0 +1,17 @@
+---
+
+dependencies:
+  - role: common_vars
+  - role: add_user
+    user_name: "{{ GAMMA_USER }}"
+    user_home: "{{ GAMMA_HOME }}"
+    group_name: "{{ GAMMA_USER }}"
+  - role: docker
+    docker_users:
+      - "{{ GAMMA_USER }}"
+  - role: git_clone
+    repo_owner: "{{ GAMMA_USER }}"
+    repo_group: "{{ GAMMA_USER }}"
+    GIT_REPOS: "{{ GAMMA_REPO }}"
+    git_home: "{{ GAMMA_HOME }}"
+    when: GAMMA_REPO is defined
