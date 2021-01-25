@@ -1478,7 +1478,10 @@ generic_env_config:  &edxapp_generic_env
   # Dashboard courses default limit
   DASHBOARD_COURSE_LIMIT: "{{ EDXAPP_DASHBOARD_COURSE_LIMIT }}"
   RG_SENTRY_ENVIRONMENT: "{{ EDXAPP_SENTRY_ENVIRONMENT }}"
-
+  #RACCOONGANG#
+  ADDL_INSTALLED_APPS: "{{ EDXAPP_ADDL_INSTALLED_APPS }}"
+  #RACCOONGANG#
+  
 lms_auth_config:
   <<: *edxapp_generic_auth
   CONTENTSTORE:
