@@ -4,7 +4,9 @@ mongo_logappend: true
 mongo_logrotate: reopen
 
 MONGO_VERSION_MAJOR_MINOR: "3.6"
-MONGO_VERSION_PATCH: "17"
+mongo_version_major_minor: "{{ MONGO_VERSION_MAJOR_MINOR }}"
+MONGO_VERSION_PATCH: "21"
+mongo_version_patch: "{{ MONGO_VERSION_PATCH }}"
 PYMONGO_VERSION: "3.6.1"
 MONGO_VERSION: "{{ MONGO_VERSION_MAJOR_MINOR }}.{{ MONGO_VERSION_PATCH }}"
 mongo_port: "27017"

@@ -1,0 +1,29 @@
+---
+
+- name: install make
+  apt:
+    name: make
+
+- name: deploy private.env
+  template:
+    src: private.env.j2
+    dest: "{{ GAMMA_APP_DIR }}/envs/private.env"
+    owner: "{{ GAMMA_USER }}"
+    group: "{{ GAMMA_USER }}"
+    mode: 0640
+
+- name: make build env={{ GAMMA_ENVIRONMENT }}
+  shell: "make build env={{ GAMMA_ENVIRONMENT }}"
+  environment:
+    GAMMA_CUSTOM_DOMAIN: "{{ GAMMA_SITE_NAME }}"
+  args:
+    chdir: "{{ GAMMA_APP_DIR }}"
+  become_user: "{{ GAMMA_USER }}"
+
+- name: make dev.up env={{ GAMMA_ENVIRONMENT }}
+  shell: "make dev.up env={{ GAMMA_ENVIRONMENT }}"
+  environment:
+    GAMMA_CUSTOM_DOMAIN: "{{ GAMMA_SITE_NAME }}"
+  args:
+    chdir: "{{ GAMMA_APP_DIR }}"
+  become_user: "{{ GAMMA_USER }}"

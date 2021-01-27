@@ -9,7 +9,7 @@
 #
 ##
 # Defaults for role edx_service_with_rendered_config
-# 
+#
 
 #
 # vars are namespace with the module name.
@@ -34,4 +34,4 @@ edx_service_with_rendered_config_packages:
   debian: []
   redhat: []
 
-edx_service_with_rendered_config_local_config_file: "{{ UNENCRYPTED_CFG_DIR }}/{{ edx_service_with_rendered_config_service_name }}.yml"
+#edx_service_with_rendered_config_local_config_file: "{{ UNENCRYPTED_CFG_DIR }}/{{ edx_service_with_rendered_config_service_name }}.yml"

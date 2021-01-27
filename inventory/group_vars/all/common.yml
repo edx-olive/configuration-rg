@@ -1,0 +1,15 @@
+---
+
+COMMON_OAUTH_BASE_URL: "{{ EDXAPP_LMS_ROOT_URL }}"
+COMMON_EDX_PPA_KEY_SERVER: 'hkp://keyserver.ubuntu.com:80'
+
+SWAPFILE_SIZE: '8GB'
+
+COMMON_SENTRY_DSN: ''
+COMMON_SENTRY_ENVIRONMENT: "{{ COMMON_ENVIRONMENT }}"
+
+edx_django_service_superuser_username: 'staff'
+edx_django_service_superuser_email: 'staff@example.com'
+edx_django_service_superuser_password: "{{ COMMON_STAFF_PASSWORD | default('password') }}"
+
+slack_notification_token: ''

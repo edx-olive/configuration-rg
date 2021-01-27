@@ -1,0 +1,36 @@
+---
+edx_user_attr: yes # enable role
+
+EDXAPP_STAFF_PASSWORD: edxPass123321_
+
+edxapp_users:
+  - email: 'staff@example.com'
+    username: staff
+    password: "{{ EDXAPP_STAFF_PASSWORD }}"
+    is_staff: true
+    is_superuser: true
+  - email: 'honor@example.com'
+    username: honor
+    password: "{{ EDXAPP_STAFF_PASSWORD }}"
+    is_staff: false
+    is_superuser: false
+  - email: 'audit@example.com'
+    username: audit
+    password: "{{ EDXAPP_STAFF_PASSWORD }}"
+    is_staff: false
+    is_superuser: false
+  - email: 'verified@example.com'
+    username: verified
+    password: "{{ EDXAPP_STAFF_PASSWORD }}"
+    is_staff: false
+    is_superuser: false
+
+# copy-paste from roles/edxapp/defaults/main.yml
+EDXAPP_SETTINGS: '{{ COMMON_EDXAPP_SETTINGS }}'
+edxapp_settings: '{{ EDXAPP_SETTINGS }}'
+edxapp_app_dir: "{{ COMMON_APP_DIR }}/edxapp"
+edxapp_code_dir: "{{ edxapp_app_dir }}/edx-platform"
+edxapp_venvs_dir: "{{ edxapp_app_dir }}/venvs"
+edxapp_venv_dir: "{{ edxapp_venvs_dir }}/edxapp"
+edxapp_venv_bin: "{{ edxapp_venv_dir }}/bin"
+

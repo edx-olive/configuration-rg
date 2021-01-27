@@ -1,0 +1,21 @@
+---
+- include: edx-awx-start-update.yml
+
+- include: edx_single.yml
+
+- import_role: 
+    name: user_retirement_pipeline
+  when: COMMON_RETIREMENT_SERVICE_SETUP
+
+- import_role:
+    name: edx-user-attr
+  tags: [ "edx_user_attr" ]
+
+- import_role:
+    name: filebeat
+
+- include: edx-backup-duplicity.yml
+
+- include: edx-zabbix-single.yml
+
+- include: edx-awx-stop-update.yml

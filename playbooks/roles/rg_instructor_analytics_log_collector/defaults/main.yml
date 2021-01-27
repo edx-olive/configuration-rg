@@ -1,0 +1,12 @@
+---
+analytics_log_watcher_service_name: "analytics_log_watcher"
+analytics_log_watcher_sleep_time: 300
+
+tracking_directory: '{{ COMMON_LOG_DIR }}/tracking'
+
+## included vars to avoid include edxapp role
+edxapp_log_dir: "{{ COMMON_LOG_DIR }}/edx"
+edxapp_app_dir: "{{ COMMON_APP_DIR }}/edxapp"
+edxapp_venvs_dir: "{{ edxapp_app_dir }}/venvs"
+edxapp_venv_dir: "{{ edxapp_venvs_dir }}/edxapp"
+edxapp_venv_bin: "{{ edxapp_venv_dir }}/bin"

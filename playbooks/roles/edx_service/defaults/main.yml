@@ -23,6 +23,10 @@ edx_service_repos: []
 # and not write out a config at all.
 edx_service_config: {}
 
+edx_service_config_common:
+  RG_SENTRY_DSN: "{{ COMMON_SENTRY_DSN }}"
+  RG_SENTRY_ENVIRONMENT: "{{ COMMON_SENTRY_ENVIRONMENT }}-{{ edx_service_name }}"
+
 # If you would like edx_service to strip out !!null settings before writing out
 # the yaml config, set this to true.
 edx_service_config_filter_nones: false
@@ -33,12 +37,3 @@ edx_service_config_filter_nones: false
 edx_service_packages:
   debian: []
   redhat: []
-
-edx_service_local_config_file: "{{ UNENCRYPTED_CFG_DIR }}/{{ edx_service_name }}.yml"
-
-edx_service_decrypt_config_enabled: false
-edx_service_copy_config_enabled: false
-
-edx_service_use_python38: false
-edx_service_use_python3: false
-edx_service_venv_dir: "{{ edx_service_home }}/venvs/{{ edx_service_name }}"

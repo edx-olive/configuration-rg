@@ -1,0 +1,13 @@
+---
+
+- name: Creating edX standard users staff, audit, verified, etc, etc...
+  include_tasks: set_user_attrs.yml
+  loop: "{{ edxapp_users | flatten(levels=1) }}"
+  when: edx_user_attr
+  no_log: True
+  become: yes
+  become_user: "{{ common_web_user }}"
+  tags:
+    - install
+    - install:configuration
+

@@ -1,0 +1,135 @@
+---
+#
+# single server install
+#
+
+- import_role:
+    name: python
+
+- import_role:
+    name: swapfile
+  when: SWAPFILE_SIZE is defined and SWAPFILE_SIZE != ''
+
+- import_role:
+    name: mysql
+  when: EDXAPP_MYSQL_HOST == 'localhost' or EDXAPP_MYSQL_HOST == '127.0.0.1'
+  tags: [ "mysql" ]
+
+- import_role:
+    name: edxlocal
+  tags: [ "mysql" ]
+
+- import_role:
+    name: memcache
+  when: "'localhost' in ' '.join(EDXAPP_MEMCACHE) or '127.0.0.1' in ' '.join(EDXAPP_MEMCACHE)"
+
+- import_role:
+    name: mongo_3_6
+  when: "'localhost' in EDXAPP_MONGO_HOSTS or '127.0.0.1' in EDXAPP_MONGO_HOSTS"
+
+- import_role:
+    name: rabbitmq
+  when: rabbitmq_ip == 'localhost' or rabbitmq_ip == '127.0.0.1'
+
+- import_role:
+    name: elasticsearch
+  when: "'localhost' in EDXAPP_ELASTIC_SEARCH_CONFIG|map(attribute='host') or '127.0.0.1' in EDXAPP_ELASTIC_SEARCH_CONFIG|map(attribute='host')"
+
+- import_role:
+    name: nginx
+  vars:
+    nginx_sites:
+      - "lms"
+      - "cms"
+      - "{{ 'certs' if COMMON_ENABLE_CERTS else '' }}"
+      - "{{ 'forum' if COMMON_ENABLE_FORUM else '' }}"
+      - "{{ 'xqueue' if COMMON_ENABLE_XQUEUE else '' }}"
+      - "{{ 'insights' if COMMON_ENABLE_INSIGHTS else '' }}"
+    nginx_default_sites:
+      - "lms"
+  tags: [ "nginx" ]
+
+- import_role:
+    name: edxapp
+
+- import_role:
+    name: ecommerce
+  when: COMMON_ENABLE_ECOMMERCE
+
+- import_role:
+    name: ecomworker
+  when: COMMON_ENABLE_ECOMMERCE
+
+- import_role:
+    name: rg_instructor_analytics_log_collector
+  when: COMMON_RG_INSTRUCTOR_ANALYTICS_ENABLE
+
+- import_role:
+    name: celerybeat
+  when: COMMON_ENABLE_CELERYBEAT
+
+- import_role:
+    name: analytics_api
+  when: COMMON_ENABLE_ANALYTICS_API
+
+- import_role:
+    name: insights
+  when: COMMON_ENABLE_INSIGHTS
+
+- import_role:
+    name: edx_notes_api
+  when: EDXAPP_ENABLE_EDXNOTES
+
+- import_role:
+    name: forum
+  when: COMMON_ENABLE_FORUM
+
+- import_role:
+    name: notifier
+  when: COMMON_ENABLE_FORUM
+
+- import_role:
+    name: discovery
+  when: COMMON_ENABLE_DISCOVERY
+
+- import_role:
+    name: credentials
+  when: COMMON_ENABLE_CREDENTIALS
+
+- import_role:
+    name: blockstore
+  when: SANDBOX_ENABLE_BLOCKSTORE
+
+- import_role:
+    name: xqueue
+  vars:
+    update_users: True
+  when: COMMON_ENABLE_XQUEUE
+
+- import_role:
+    name: certs
+  when: COMMON_ENABLE_CERTS
+
+- import_role:
+    name: demo
+
+- import_role:
+    name: oauth_client_setup
+
+- import_role:
+    name: rg_gamma
+  when: COMMON_ENABLE_GAMMA
+  tags: [ "rg_gamma" ]
+
+- import_role:
+    name: filebeat
+  vars:
+    filebeat_enable: "{{ COMMON_ENABLE_FILEBEAT }}"
+
+- import_role:
+    name: datadog
+  when: COMMON_ENABLE_DATADOG
+
+- import_role:
+    name: datadog-uninstall
+  when: not COMMON_ENABLE_DATADOG

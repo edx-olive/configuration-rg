@@ -39,6 +39,17 @@
     - install
     - install:code
 
+- name: Install read-only ssh key. Create .ssh directory
+  file:
+    path: "{{ git_home }}/.ssh"
+    state: directory
+    owner: "{{ repo_owner }}"
+    group: "{{ repo_group }}"
+    mode: "0700"
+  when: GIT_REPOS is defined
+  tags:
+    - install
+    - install:code
 
 - name: Install read-only ssh key
   copy:
@@ -55,7 +66,7 @@
     - install:code
 
 - name: Check that working tree is clean
-  shell: test ! -e "{{ item }}" || git -C "{{ item }}" status --porcelain --untracked-files=no
+  shell: test ! -e "{{ item }}/.git" || git -C "{{ item }}" status --porcelain --untracked-files=no
   register: dirty_files
   # Using the map here means that the items will only be the DESTINATION strings,
   # rather than the full GIT_REPOS structures, which have data we don't want to log,

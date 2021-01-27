@@ -1,0 +1,48 @@
+---
+
+FORUM_VERSION: "open-release/juniper.master"
+NOTIFIER_VERSION: "open-release/juniper.master"
+XQUEUE_VERSION: "open-release/juniper.master"
+CERTS_VERSION: "open-release/juniper.master"
+DEMO_VERSION: "open-release/juniper.master"
+
+mysql_host: "localhost"
+worker_host: "127.0.0.1"
+memcached_host: "127.0.0.1"
+mongo_hosts: "127.0.0.1"
+elasticsearch_host: "127.0.0.1"
+rabbit_master: "127.0.0.1"
+rabbitmq_ip: "{{ rabbit_master }}"
+xqueue_host: "127.0.0.1"
+certs_host: "127.0.0.1"
+forum_host: "127.0.0.1"
+ora_host: "127.0.0.1"
+
+migrate_db: "yes"
+
+XQUEUE_LOGGING_ENV: production
+XQUEUE_MYSQL_HOST: "{{ mysql_host }}"
+
+CERTS_QUEUE_URL: "http://{{ xqueue_host }}:18040"
+CERTS_URL: "http://{{ certs_host }}:18090"
+CERTS_DOWNLOAD_URL: "http://{{ certs_host }}:18090"
+CERTS_VERIFY_URL: "http://{{ certs_host }}:18090"
+
+FORUM_MONGO_HOSTS: "{{ mongo_hosts }}"
+FORUM_MONGO_DATABASE: "cs_comments_service"
+FORUM_SINATRA_ENV: "production"
+FORUM_RACK_ENV: "production"
+FORUM_ELASTICSEARCH_HOST: "{{ elasticsearch_host }}"
+FORUM_MONGO_URL: "mongodb://{{ FORUM_MONGO_USER }}:{{ FORUM_MONGO_PASSWORD }}@{{ mongo_hosts }}:27017/{{ FORUM_MONGO_DATABASE }}"
+
+NOTIFIER_LANGUAGE: "{{ EDXAPP_LANGUAGE_CODE }}"
+NOTIFIER_DATABASE_NAME: "notifier"
+NOTIFIER_DATABASE_ENGINE: "django.db.backends.mysql"
+NOTIFIER_DATABASE_USER: "notifier"
+NOTIFIER_DATABASE_HOST: "{{ EDXAPP_MYSQL_HOST }}"
+NOTIFIER_DATABASE_PORT: "{{ EDXAPP_MYSQL_PORT }}"
+
+
+MONGODB_APT_KEYSERVER: "{{ COMMON_EDX_PPA_KEY_SERVER }}"
+MONGO_CLIENT_MONGODB_APT_KEYSERVER: "{{ COMMON_EDX_PPA_KEY_SERVER }}"
+SERVER_UTILS_EDX_PPA_KEY_SERVER: "{{ COMMON_EDX_PPA_KEY_SERVER }}"

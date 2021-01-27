@@ -20,8 +20,7 @@
 - name: combined lms auth env for yml
   set_fact:
     lms_combined_config: '{{lms_env_config|combine(lms_auth_config)}}'
-  no_log: "{{ COMMON_CONFIG_NO_LOGGING }}"
-  when: '"lms" in service_variants_enabled and not EDXAPP_DECRYPT_CONFIG_ENABLED'
+  when: '"lms" in service_variants_enabled'
   tags:
     - install
     - install:configuration
@@ -39,7 +38,7 @@
   become: true
   no_log: "{{ COMMON_CONFIG_NO_LOGGING }}"
   with_items: "{{ service_variants_enabled }}"
-  when: '"lms" in service_variants_enabled and not EDXAPP_DECRYPT_CONFIG_ENABLED'
+  when: '"lms" in service_variants_enabled'
   tags:
     - install
     - install:configuration
@@ -50,8 +49,7 @@
 - name: combined cms auth env for yml
   set_fact:
     cms_combined_config: '{{cms_env_config|combine(cms_auth_config)}}'
-  no_log: "{{ COMMON_CONFIG_NO_LOGGING }}"
-  when: '"cms" in service_variants_enabled and not EDXAPP_DECRYPT_CONFIG_ENABLED'
+  when: '"cms" in service_variants_enabled'
   tags:
     - install
     - install:configuration
@@ -69,54 +67,13 @@
   become: true
   no_log: "{{ COMMON_CONFIG_NO_LOGGING }}"
   with_items: "{{ service_variants_enabled }}"
-  when: '"cms" in service_variants_enabled and not EDXAPP_DECRYPT_CONFIG_ENABLED'
+  when: '"cms" in service_variants_enabled'
   tags:
     - install
     - install:configuration
     - install:app-configuration
     - edxapp_cfg # Old deprecated tag, will remove when possible
     - edxapp_cfg_yaml_only # Used to render the yaml without the json until we remove the json configs
-
-- name: Decrypt lms config
-  local_action: command asym_crypto_yaml decrypt-encrypted-yaml --secrets_file_path {{ ENCRYPTED_CFG_DIR }}/lms.yml --private_key_path {{ DECRYPT_CONFIG_PRIVATE_KEY }} --outfile_path {{ UNENCRYPTED_CFG_DIR }}/lms.yml
-  become: false
-  with_items: "{{ service_variants_enabled }}"
-  when: '"lms" in service_variants_enabled and EDXAPP_DECRYPT_CONFIG_ENABLED'
-  no_log: "{{ COMMON_CONFIG_NO_LOGGING }}"
-  tags:
-    - install
-    - install:configuration
-    - install:app-configuration
-    - edxapp_cfg # Old deprecated tag, will remove when possible
-    - edxapp_cfg_yaml_only
-
-- name: Decrypt cms config
-  local_action: command asym_crypto_yaml decrypt-encrypted-yaml --secrets_file_path {{ ENCRYPTED_CFG_DIR }}/studio.yml --private_key_path {{ DECRYPT_CONFIG_PRIVATE_KEY }} --outfile_path {{ UNENCRYPTED_CFG_DIR }}/studio.yml
-  become: false
-  with_items: "{{ service_variants_enabled }}"
-  when: '"cms" in service_variants_enabled and EDXAPP_DECRYPT_CONFIG_ENABLED'
-  no_log: "{{ COMMON_CONFIG_NO_LOGGING }}"
-  tags:
-    - install
-    - install:configuration
-    - install:app-configuration
-    - edxapp_cfg # Old deprecated tag, will remove when possible
-
-- name: Replace deploy host to sandbox dns name
-  replace:
-    path: "{{ UNENCRYPTED_CFG_DIR }}/{{ item }}.yml"
-    regexp: 'deploy_host'
-    replace: "{{ COMMON_DEPLOY_HOSTNAME }}"
-  with_items: ['lms','studio']
-  when: EDXAPP_DECRYPT_CONFIG_ENABLED and SANDBOX_CONFIG
-  no_log: "{{ COMMON_CONFIG_NO_LOGGING }}"
-  become: false
-  delegate_to: localhost
-  tags:
-    - install
-    - install:configuration
-    - install:app-configuration
-    - edxapp_cfg # Old deprecated tag, will remove when possible
 
 - name: Copy lms config file
   copy:
@@ -226,7 +183,7 @@
     force: yes
   become_user: "{{ supervisor_user }}"
   with_items: "{{ service_variants_enabled }}"
-  when: celery_worker is not defined and not disable_edx_services
+  when: not disable_edx_services
   tags:
     - install
     - install:configuration
@@ -238,7 +195,7 @@
     state: link
     force: yes
   become_user: "{{ supervisor_user }}"
-  when: celery_worker is defined and not disable_edx_services
+  when: not disable_edx_services
   tags:
     - install
     - install:configuration
@@ -290,8 +247,53 @@
       owner: "{{ edxapp_user }}"
       group: "{{ common_web_group }}"
       mode:  "0755"
-  when: celery_worker is not defined and not devstack
+  when: not devstack and EDXAPP_REMOVE_STATICFILES_DIR_DURING_UPDATE
   with_items: ['absent', 'directory']
+  tags:
+    - gather_static_assets
+    - assets
+
+- name: Create empty staticfiles directory
+  file:
+    path: "{{ edxapp_staticfile_dir }}-new"
+    state: directory
+    owner: "{{ edxapp_user }}"
+    group: "{{ common_web_group }}"
+    mode:  "0755"
+  when: not devstack and not EDXAPP_REMOVE_STATICFILES_DIR_DURING_UPDATE
+  tags:
+    - gather_static_assets
+    - assets
+
+- name: Restore webpack-stats.json from previous version to protect from 500 on LMS
+  copy:
+    src: "{{ edxapp_staticfile_dir }}/webpack-stats.json"
+    dest: "{{ edxapp_staticfile_dir }}-new/webpack-stats.json"
+    remote_src: yes
+    owner: "{{ edxapp_user }}"
+    group: "{{ common_web_group }}"
+    mode:  "0755"
+  when: not devstack and not EDXAPP_REMOVE_STATICFILES_DIR_DURING_UPDATE
+  ignore_errors: True
+  tags:
+    - gather_static_assets
+    - assets
+
+- name: Remove directory with previous version of staticfiles
+  file:
+    path: "{{ edxapp_staticfile_dir }}-prev"
+    state: absent
+  when: not devstack and not EDXAPP_REMOVE_STATICFILES_DIR_DURING_UPDATE
+  tags:
+    - gather_static_assets
+    - assets
+
+# custom rule was applied to nginx configuration to serve /static from both directories
+- name: Rotate staticfiles version - current to previuos
+  shell: |
+    mv "{{ edxapp_staticfile_dir }}" "{{ edxapp_staticfile_dir }}-prev" &&
+    mv "{{ edxapp_staticfile_dir }}-new" "{{ edxapp_staticfile_dir }}"
+  when: not devstack and not EDXAPP_REMOVE_STATICFILES_DIR_DURING_UPDATE
   tags:
     - gather_static_assets
     - assets
@@ -299,7 +301,7 @@
 # Gather assets using paver if possible
 - name: "gather static assets with paver"
   command: "{{ COMMON_BIN_DIR }}/edxapp-update-assets"
-  when: celery_worker is not defined and not devstack
+  when: not devstack
   tags:
     - gather_static_assets
     - assets

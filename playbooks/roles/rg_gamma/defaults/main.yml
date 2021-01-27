@@ -1,0 +1,46 @@
+---
+
+GAMMA_VERSION: master
+GAMMA_REPO:
+  - PROTOCOL: 'ssh'
+    DOMAIN: 'gitlab.raccoongang.com'
+    PATH: 'Duck-Team/rg-projects/rg-gamification'
+    REPO: 'gamma.git'
+    VERSION: "{{ GAMMA_VERSION }}"
+    DESTINATION: "{{ GAMMA_APP_DIR }}"
+    SSH_KEY: "{{ GAMMA_GIT_IDENTITY | default(EDXAPP_GIT_IDENTITY) }}"
+
+GAMMA_HOME: "{{ COMMON_APP_DIR }}/gamma"
+GAMMA_APP_DIR: "{{ GAMMA_HOME }}/gamma"
+GAMMA_USER: gamma
+
+GAMMA_EDX_LMS_BASE_URL: "{{ EDXAPP_LMS_ROOT_URL | default('http://localhost:8000') }}"
+GAMMA_EDX_API_KEY: "{{ EDXAPP_EDX_API_KEY | default('PUT_YOUR_API_KEY_HERE') }}"
+
+GAMMA_DEBUG: False
+
+GAMMA_APP_KEY: "SET_ME_PLEASE"
+GAMMA_APP_SECRET: "SET_ME_PLEASE"
+GAMMA_DJANGO_ADMIN_EMAIL: 'staff@example.com'
+GAMMA_DJANGO_ADMIN_USER: 'staff'
+GAMMA_DJANGO_ADMIN_PASS: "{{ EDXAPP_STAFF_PASSWORD | default('MegoSecret1ras') }}"
+GAMMA_DJANGO_SETTINGS_MODULE: "gamma.settings.production"
+GAMMA_SENTRY_DSN: "{{ COMMON_RG_SENTRY_DSN | default('') }}"
+GAMMA_SENTRY_ENV: "{{ COMMON_RG_SENTRY_ENVIRONMENT | default('') }}"
+GAMMA_SENTRY_SERVER_NAME: "{{ ansible_host }}"
+GAMMA_SENTRY_RELEASE: "{{ GAMMA_VERSION }}"
+
+GAMMA_ENVIRONMENT: "prod" # gamma deployment not ready for DEV, STAGE envs yet
+
+GAMMA_DB_ENGINE: django.db.backends.postgresql
+GAMMA_DB_NAME: postgres
+GAMMA_DB_USER: postgres
+GAMMA_DB_PASSWORD: postgres
+GAMMA_DB_HOST: postgres
+GAMMA_DB_PORT: 5432
+
+GAMMA_MONGO_URL: 'mongodb://mongo:27017/'
+GAMMA_MONGO_DATABASE: 'gamma_data'
+
+GAMMA_CELERY_BROKER_URL: 'amqp://guest@rabbit'
+GAMMA_CELERY_RESULT_BACKEND: 'redis://redis:6379'

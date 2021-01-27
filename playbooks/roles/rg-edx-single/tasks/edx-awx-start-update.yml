@@ -1,0 +1,53 @@
+---
+- name: get visible names for zabbix hosts which names starts with {{ EDXAPP_LMS_BASE }}
+  shell: "python ~/playbooks/roles/zabbix/server/files/get_visiblename.py {{ EDXAPP_LMS_BASE | default(inventory_hostname, true) }}"
+  environment:
+    ZABBIX_SERVER: "https://zabbix.raccoongang.com"
+    ZABBIX_USER: "{{ vault_zabbix_api_login }}"
+    ZABBIX_PASS: "{{ vault_zabbix_api_password }}"
+  register: hosts
+  when: zabbix_enabled
+  delegate_to: localhost
+  become: False
+  tags:
+    - skip_ansible_lint
+
+- name: creating zabbix 3 hour maintenance for hosts - {{ hosts.stdout.split('\n') }}
+  zabbix_maintenance:
+    name: "AWX update - {{ project_name }}"
+    host_names: "{{ hosts.stdout.split('\n') }}"
+    # host_name: "Test"
+    state: present
+    minutes: 180
+    server_url: "https://zabbix.raccoongang.com"
+    login_user: "{{ vault_zabbix_api_login }}"
+    login_password: "{{ vault_zabbix_api_password }}"
+  when: zabbix_enabled and hosts.stdout != ''
+  delegate_to: localhost
+  become: False
+
+- name: Check for expired apt keys
+  shell: "apt-key list | grep expired: | cat"
+  register: ppa_key_status
+
+- name: Update known expired repo keys
+  shell: "{{ item }}"
+  args:
+    warn: False
+  with_items:
+    - "apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 69464050"
+    - "curl -L https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey | apt-key add -"
+    - 'curl -L https://www.mongodb.org/static/pgp/server-3.4.asc | apt-key add -'
+  become: True
+  when: "'expired' in ppa_key_status.stdout"
+
+- name: Sending slack notification
+  slack:
+    token: "{{ slack_notification_token }}"
+    channel: "{{ item }}"
+    msg: "AWX: Start updating {{ project_name }} {{ project_environment }}{{ '. Started by: '~awx_user_name if awx_user_name is defined else '' }}{{ ' https://awx.raccoongang.com/#/workflows/'~awx_workflow_job_id if awx_workflow_job_id is defined else '' }}"
+    icon_url: "https://awx.raccoongang.com/favicon.ico"
+    username: "AWX"
+  with_items: "{{ slack_notification_channels[project_environment] }}"
+  when: slack_notification_channels is defined and slack_notification_channels[project_environment] is defined and slack_notification_channels[project_environment] != ''
+  delegate_to: localhost

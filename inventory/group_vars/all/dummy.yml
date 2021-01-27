@@ -1,0 +1,3 @@
+---
+forum_app_dir: "{{ COMMON_APP_DIR }}/forum"
+rbenv_dir: "{{ forum_app_dir }}"

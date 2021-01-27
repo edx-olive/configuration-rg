@@ -143,7 +143,7 @@ edx_django_service_databases:
     HOST: '{{ edx_django_service_default_db_host }}'
     PORT: '3306'
     ATOMIC_REQUESTS: '{{ edx_django_service_default_db_atomic_requests }}'
-    CONN_MAX_AGE: '{{ edx_django_service_default_db_conn_max_age }}'
+    CONN_MAX_AGE: 60
     OPTIONS: '{{ edx_django_service_db_options }}'
 
 edx_django_service_social_auth_edx_oauth2_key: '{{ edx_django_service_name }}-sso-key'
@@ -259,3 +259,7 @@ edx_django_service_enable_experimental_docker_shim: false
 edx_django_service_docker_run_command_make_migrate: ""
 edx_django_service_docker_run_command_make_static: ""
 edx_django_service_docker_image_name: 'openedx/{{ edx_django_service_name }}'
+
+edx_django_service_superuser_username: ''
+edx_django_service_superuser_email: 'staff@example.com'
+edx_django_service_superuser_password: 'password'

@@ -1,0 +1,43 @@
+---
+# TODO refactoring configuration to get rid of undefined variables in ansible playbooks
+
+backup_enabled: "{{ COMMON_ENABLE_BACKUPS_DUPLICITY }}"
+
+backup_user: 'duplicity'
+backup_duplicity:
+  target: 's3://s3.amazonaws.com/backups_bucket'
+  target_method: 's3'
+  target_user: "{{ EDXAPP_AWS_ACCESS_KEY_ID }}"
+  target_pass: "{{ EDXAPP_AWS_SECRET_ACCESS_KEY }}"
+
+# example configuration for S3 storage
+# backup_duplicity:
+#   target: "s3://{{ EDXAPP_S3_HOST | default('s3.amazonaws.com') }}/{{ project_name | lower | regex_replace('_','-') }}-{{ env | lower }}-backups"
+#   target_method: "s3"
+#   target_user: "{{ EDXAPP_AWS_ACCESS_KEY_ID }}"
+#   target_pass: "{{ EDXAPP_AWS_SECRET_ACCESS_KEY }}"
+
+# example configuration for Azure Storage
+# backup_duplicity:
+#   target: "azure://{{ project_name | lower }}-{{ env | lower }}-backups"
+#   target_method: "azure"
+#   target_user: "{{ EDXAPP_AZURE_ACCOUNT_NAME }}"
+#   target_pass: "{{ EDXAPP_AZURE_ACCOUNT_KEY }}"
+
+# default backups profiles for base OpenEdx installation
+edx_backup_duplicity_profiles:
+  - name: 'mysql'
+    type: 'mysql'
+    mysql_user: "{{ COMMON_MYSQL_READ_ONLY_USER | default('read_only') }}"
+    mysql_password: "{{ COMMON_MYSQL_READ_ONLY_PASS }}"
+    mysql_host: "{{ EDXAPP_MYSQL_HOST | default('127.0.0.1') }}"
+
+  - name: 'mongo'
+    type: 'mongo'
+    mongo_user: "{{ MONGO_ADMIN_USER | default('admin') }}"
+    mongo_password: "{{ MONGO_ADMIN_PASSWORD }}"
+    mongo_authdb: 'admin'
+    mongo_host: "{{ EDXAPP_MONGO_HOSTS | default('127.0.0.1') }}"
+
+# TODO to add AWS snapshots
+# TODO to add Azure Recovery Vault

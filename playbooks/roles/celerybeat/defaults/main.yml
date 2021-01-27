@@ -1,0 +1,9 @@
+---
+EDXAPP_CELERY_BEAT:
+   enabled: "{{ COMMON_ENABLE_CELERYBEAT | default(False) | bool }}"
+   monitor: True
+   service_variant: lms
+   beat_file: "{{ supervisor_data_dir }}/beat"
+   pid_file: "{{ supervisor_data_dir }}/celery_beat.pid"
+
+celery_beat_service_name: celerybeat
