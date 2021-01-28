@@ -28,8 +28,11 @@
   when: "'localhost' in EDXAPP_MONGO_HOSTS or '127.0.0.1' in EDXAPP_MONGO_HOSTS"
 
 - import_role:
-    name: rabbitmq
-  when: rabbitmq_ip == 'localhost' or rabbitmq_ip == '127.0.0.1'
+    name: redis
+
+#- import_role:
+#    name: rabbitmq
+#  when: rabbitmq_ip == 'localhost' or rabbitmq_ip == '127.0.0.1'
 
 - import_role:
     name: elasticsearch
@@ -84,9 +87,9 @@
     name: forum
   when: COMMON_ENABLE_FORUM
 
-- import_role:
-    name: notifier
-  when: COMMON_ENABLE_FORUM
+#- import_role:
+#    name: notifier
+#  when: COMMON_ENABLE_FORUM
 
 - import_role:
     name: discovery

@@ -1,8 +1,8 @@
-FROM python:2
+FROM python:3.8
 
-RUN pip install ansible==2.7.12 \
+RUN pip install ansible \
     datadog \
-    PyYAML==3.12 \
+    PyYAML \
     zabbix-api \
     mysqlclient \
     && rm -rf ~/.cache
