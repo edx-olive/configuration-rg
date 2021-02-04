@@ -4,10 +4,10 @@
   apt:
     deb: "{{item}}"
   with_items:
-    - https://downloads.mysql.com/archives/get/p/23/file/mysql-community-client_5.7.32-1ubuntu18.04_amd64.deb
-    - https://downloads.mysql.com/archives/get/p/23/file/mysql-client_5.7.32-1ubuntu18.04_amd64.deb
-    - https://downloads.mysql.com/archives/get/p/23/file/mysql-community-server_5.7.32-1ubuntu18.04_amd64.deb
-    - https://downloads.mysql.com/archives/get/p/23/file/mysql-server_5.7.32-1ubuntu18.04_amd64.deb
+    - https://cdn.mysql.com/archives/mysql-5.7/mysql-community-client_5.7.32-1ubuntu18.04_amd64.deb
+    - https://cdn.mysql.com/archives/mysql-5.7/mysql-client_5.7.32-1ubuntu18.04_amd64.deb
+    - https://cdn.mysql.com/archives/mysql-5.7/mysql-community-server_5.7.32-1ubuntu18.04_amd64.deb
+    - https://cdn.mysql.com/archives/mysql-5.7/mysql-server_5.7.32-1ubuntu18.04_amd64.deb
 
 - name: Install mysql and dependencies
   apt:

@@ -171,6 +171,7 @@
   tags:
     - install
     - install:configuration
+  ignore_errors: yes
 
 # these links are deprecated in favor of the shell wrapper
 - name: Remove symlink for supervisor cfg
@@ -185,6 +186,7 @@
   tags:
     - install
     - install:configuration
+  ignore_errors: yes
 
 - name: Create helper script for running supervisor
   template:
