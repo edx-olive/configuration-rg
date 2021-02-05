@@ -17,6 +17,10 @@
   pip:
     name: distro==1.5.0
   become: True
+
+- name: add deadsnakes repo
+  apt_repository:
+      repo: ppa:deadsnakes/ppa
 #- name: Update apt-get
 #  command: apt-get update -qq
 #  register: python_update_result
