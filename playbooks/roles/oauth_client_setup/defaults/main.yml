@@ -94,10 +94,10 @@ oauth_client_setup_oauth2_clients:
       }
 
     - {
-        name: "{{ edx-notes if COMMON_ENABLE_EDXNOTES | default(false)|bool else 'None' }}",
+        name: "{{ edx_notes_api_service_name if COMMON_ENABLE_EDXNOTES | default(false)|bool else 'None' }}",
         backend_service_id: "{{ EDX_NOTES_API_CLIENT_ID | default('None') }}",
         backend_service_secret: "{{ EDX_NOTES_API_CLIENT_SECRET | default('None') }}",
-        username: "{{ staff | default('None') }}",
+        username: staff,
       }
 
 #
