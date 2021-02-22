@@ -295,6 +295,24 @@
     - devstack
     - devstack:install
 
+- name: create django specific directories
+  file:
+    path: "{{ item.dir }}"
+    state: directory
+    owner: "{{ item.owner }}"
+    group: "{{ common_web_group }}"
+    mode: "0755"
+  with_items:
+    - dir: "{{ edx_django_service_data_dir }}"
+      owner: "{{ edx_django_service_user }}"
+    - dir: "{{ edx_django_service_data_dir }}/media"
+      owner: "{{ common_web_user }}"
+    - dir: "{{ edx_django_service_data_dir }}/uploads"
+      owner: "{{ common_web_user }}"
+  tags:
+    - install
+    - install:base
+
 - name: setup the app env file
   template:
     src: "edx/app/app/app_env.j2"

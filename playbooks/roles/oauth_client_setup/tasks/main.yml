@@ -60,6 +60,28 @@
   with_items: "{{ oauth_client_setup_oauth2_clients }}"
   when:
     - item.name != 'None'
+    - item.name != 'edx_notes_api'
+    - item.backend_service_id is defined
+    - item.backend_service_id != 'None'
+    - item.backend_service_secret is defined
+    - item.backend_service_secret != 'None'
+
+- name: Create OAuth2 django-oauth-toolkit Backend Service Applications For edx_notes_api service
+  shell: >
+    {{ edxapp_venv_bin }}/python {{ COMMON_BIN_DIR }}/manage.edxapp lms --settings={{ COMMON_EDXAPP_SETTINGS }}
+    create_dot_application
+    --grant-type client-credentials
+    --client-id {{ item.backend_service_id }}
+    --client-secret {{ item.backend_service_secret }}
+    --scopes user_id
+    --update
+    'edx-notes'
+    {{ item.username }}
+  become_user: "{{ edxapp_user }}"
+  environment: "{{ edxapp_environment }}"
+  with_items: "{{ oauth_client_setup_oauth2_clients }}"
+  when:
+    - item.name == 'edx_notes_api'
     - item.backend_service_id is defined
     - item.backend_service_id != 'None'
     - item.backend_service_secret is defined
