@@ -6,13 +6,13 @@ if ! test -x /edx/bin/python.discovery -o -x /edx/bin/python.edxapp ; then
 fi
 
 SHELL=/bin/bash
-COURSE_DISCOVERY_CFG=/edx/etc/discovery.yml
+DISCOVERY_CFG=/edx/etc/discovery.yml
 LOG_FILE=/edx/var/log/update_discovery/edx.log
 mkdir -p `dirname ${LOG_FILE}`
 exec &>> ${LOG_FILE}
 exec 2>&1
 export SHELL
-export COURSE_DISCOVERY_CFG
+export DISCOVERY_CFG
 
 if test -x /edx/bin/python.discovery ; then
   sudo -Eu discovery /edx/app/discovery/venvs/discovery/bin/python /edx/app/discovery/discovery/manage.py refresh_course_metadata --settings=course_discovery.settings.production
@@ -21,12 +21,12 @@ if test -x /edx/bin/python.discovery ; then
 else
   echo "discovery service not found" >&2
 fi
-if test -x /edx/bin/python.edxapp ; then
+if test -x /edx/app/edxapp/venvs/edxapp/bin/python ; then
   # random delay for multi-instance installations, where multiple instances runs this task simultaneously
   RAND=`head -c 1 /dev/urandom | od -t u1 | cut -c9-`
   sleep `expr ${RAND} % 90 + 1`
-
-  sudo -Eu www-data /edx/bin/python.edxapp /edx/bin/manage.edxapp lms cache_programs --settings=production
+  source /edx/app/edxapp/edxapp_env
+  sudo -Eu www-data /edx/app/edxapp/venvs/edxapp/bin/python /edx/bin/manage.edxapp lms cache_programs --settings=production
 else
   echo "edxapp service not found" >&2
 fi
