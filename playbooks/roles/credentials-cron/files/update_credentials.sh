@@ -1,0 +1,1 @@
+../../credentials/files/update_credentials.sh
