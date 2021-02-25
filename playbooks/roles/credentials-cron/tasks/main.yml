@@ -4,8 +4,8 @@
 #
 - name: Create script for Credentials copy catalog
   copy:
-    src: "update_credentails.sh"
-    dest: "{{ COMMON_BIN_DIR }}/update_credentails.sh"
+    src: "update_credentials.sh"
+    dest: "{{ COMMON_BIN_DIR }}/update_credentials.sh"
     mode: 0755
 
 - name: Create crontab job for credentials catalog copy
