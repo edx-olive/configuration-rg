@@ -236,7 +236,7 @@ edx_django_service_automated_users: {}
 # key *MUST* be supplied for all commands.
 #
 edx_django_service_post_migrate_commands: []
-
+edx_django_service_cronjob_auto: []
 # This is a comma seperated list of services which will trigger checking migrations if they are found in the
 # ec2 "services" tag. For most services this just needs to be the edx_django_service_name. In some cases it needs to be
 # overidden, such as in the case of having workers. For example for edxapp it need to be "lms,cms,workers" and for

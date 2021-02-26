@@ -226,6 +226,42 @@
     - migrate:db
     - migrate:post
 
+- name: create cronjob files
+  copy:
+    content: "{{ item.script }}"
+    dest: "{{ COMMON_BIN_DIR }}/{{ item.filename }}"
+    mode: 0755
+  become_user: "root"
+  environment: "{{ edx_django_service_environment }}"
+  with_items: '{{ edx_django_service_cronjob_auto }}'
+  when: edx_django_service_cronjob_auto is defined and edx_django_service_cronjob_auto
+  run_once: yes
+  tags:
+    - migrate
+    - migrate:db
+    - migrate:post
+
+
+- name: insert service cronjobs
+  cron:
+    name: "{{ item.name}}"
+    user: "root"
+    job: "{{ COMMON_BIN_DIR }}/{{ item.filename }}"
+    minute: "{{ item.minute|default('*') }}"
+    hour: "{{ item.hour|default('*') }}"
+    day: "{{ item.day|default('*') }}"
+    month: "{{ item.month|default('*') }}"
+    weekday: "{{ item.weekday|default('*') }}"
+  become_user: "root"
+  environment: "{{ edx_django_service_environment }}"
+  with_items: '{{ edx_django_service_cronjob_auto }}'
+  when: edx_django_service_cronjob_auto is defined and edx_django_service_cronjob_auto
+  run_once: yes
+  tags:
+    - migrate
+    - migrate:db
+    - migrate:post
+
 - name: ensure log files exist for tailing
   file:
     path: "{{ item }}"

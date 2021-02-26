@@ -144,3 +144,4 @@ edx_notes_api_debian_pkgs:
   - python3.8-dev
 
 edx_notes_api_redhat_pkgs: []
+edx_notes_cronjob_auto: []
