@@ -120,18 +120,6 @@
     name: oauth_client_setup
 
 - import_role:
-    name: credentials-cron
-  when: COMMON_ENABLE_CREDENTIALS is defined and COMMON_ENABLE_CREDENTIALS
-  tags:
-    - rg_programs
-
-- import_role:
-    name: discovery-edxapp-cron
-  when: COMMON_ENABLE_DISCOVERY is defined and COMMON_ENABLE_DISCOVERY
-  tags:
-    - rg_programs
-
-- import_role:
     name: rg_gamma
   when: COMMON_ENABLE_GAMMA
   tags: [ "rg_gamma" ]

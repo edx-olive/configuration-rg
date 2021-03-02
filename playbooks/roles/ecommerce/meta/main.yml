@@ -11,10 +11,13 @@
 # Role includes for role ecommerce
 #
 dependencies:
-  - role: edx_themes
-    theme_users:
-      - '{{ ecommerce_user }}'
-    when: ECOMMERCE_ENABLE_COMPREHENSIVE_THEMING
+  - role: git_clone
+    GIT_REPOS: '{{ ECOMMERCE_THEMES_REPOS }}'
+    repo_owner: '{{ ecommerce_user }}'
+    repo_group: '{{ common_web_group }}'
+    git_home: '{{ ecommerce_git_home }}'
+    when: ECOMMERCE_ENABLE_COMPREHENSIVE_THEMING and ECOMMERCE_THEMES_REPOS | length > 0
+
   - role: edx_django_service
     edx_django_service_version: '{{ ECOMMERCE_VERSION }}'
     edx_django_service_name: '{{ ecommerce_service_name }}'
@@ -54,7 +57,9 @@ dependencies:
     edx_django_service_social_auth_redirect_is_https: '{{ ECOMMERCE_SOCIAL_AUTH_REDIRECT_IS_HTTPS }}'
     edx_django_service_session_expire_at_browser_close: '{{ ECOMMERCE_SESSION_EXPIRE_AT_BROWSER_CLOSE }}'
     edx_django_service_staticfiles_storage: '{{ ECOMMERCE_STATICFILES_STORAGE }}'
+    edx_django_service_static_root: '{{ ECOMMERCE_STATIC_ROOT }}'
     edx_django_service_post_migrate_commands: '{{ ecommerce_post_migrate_commands }}'
+    edx_django_service_cronjob_auto: '{{ ecommerce_cronjob_auto }}' 
     edx_django_service_basic_auth_exempted_paths_extra:
       - payment
       - \.well-known/apple-developer-merchantid-domain-association

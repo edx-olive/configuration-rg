@@ -185,3 +185,41 @@ DISCOVERY_HERMES_ENABLED: "{{ COMMON_HERMES_ENABLED }}"
 DISCOVERY_DECRYPT_CONFIG_ENABLED: "{{ COMMON_DECRYPT_CONFIG_ENABLED }}"
 DISCOVERY_COPY_CONFIG_ENABLED: "{{ COMMON_COPY_CONFIG_ENABLED }}"
 discovery_post_migrate_commands: []
+# Default cron job for discovery service. Warning! Any of your custom cronjobs will override it!
+discovery_cronjob_auto: 
+  - script: |
+      #!/usr/bin/env bash
+      # This is first discovery script
+      if ! test -x {{ COMMON_BIN_DIR }}/python.discovery -o -x {{ COMMON_BIN_DIR }}/python.edxapp ; then
+        # for multi-instance installations: do nothing on non edxapp instances
+        exit
+      fi
+
+      SHELL=/bin/bash
+      DISCOVERY_CFG={{ COMMON_CFG_DIR }}/discovery.yml
+      LOG_FILE={{ COMMON_LOG_DIR }}/update_discovery/edx.log
+      mkdir -p `dirname ${LOG_FILE}`
+      exec &>> ${LOG_FILE}
+      exec 2>&1
+      export SHELL
+      export DISCOVERY_CFG
+
+      if test -x {{ COMMON_BIN_DIR }}/python.discovery ; then
+        sudo -Eu discovery {{ COMMON_APP_DIR }}/{{ discovery_service_name }}/venvs/discovery/bin/python {{ COMMON_APP_DIR }}/{{ discovery_service_name }}/discovery/manage.py refresh_course_metadata --settings=course_discovery.settings.production
+        sudo -Eu discovery {{ COMMON_APP_DIR }}/{{ discovery_service_name }}/venvs/discovery/bin/python {{ COMMON_APP_DIR }}/{{ discovery_service_name }}/discovery/manage.py update_index --disable-change-limit       --settings=course_discovery.settings.production >
+        sudo -Eu discovery {{ COMMON_APP_DIR }}/{{ discovery_service_name }}/venvs/discovery/bin/python {{ COMMON_APP_DIR }}/{{ discovery_service_name }}/discovery/manage.py remove_unused_indexes --settings=course_discovery.settings.production
+      else
+        echo "discovery service not found" >&2
+      fi
+      if test -x {{ COMMON_APP_DIR }}/edxapp/venvs/edxapp/bin/python ; then
+              # random delay for multi-instance installations, where multiple instances runs this task simultaneously      
+              RAND=`head -c 1 /dev/urandom | od -t u1 | cut -c9-`
+              sleep `expr ${RAND} % 90 + 1`
+              source {{ COMMON_APP_DIR }}/edxapp/edxapp_env
+              sudo -Eu {{ common_web_user }} {{ COMMON_APP_DIR }}/edxapp/venvs/edxapp/bin/python {{ COMMON_BIN_DIR }}/manage.edxapp lms cache_programs --settings={{ COMMON_EDXAPP_SETTINGS }}
+      else
+        echo "edxapp service not found" >&2
+      fi
+    name: "discovery first_job_update"
+    filename: "update_discovery.sh"
+    minute: "*/10"
