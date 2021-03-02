@@ -177,9 +177,9 @@ ECOMMERCE_DEFAULT_SITE_THEME: "theme"
 ECOMMERCE_COMPREHENSIVE_THEME_DIRS:
   - "{{ ECOMMERCE_THEME_DIR }}"
 
-ecommerce_git_home: /edx/app/ecommerce
-ECOMMERCE_STATIC_ROOT: /edx/var/ecommerce/staticfiles
-ECOMMERCE_THEME_DIR: "{{ COMMON_DATA_DIR }}/ecommerce"
+ecommerce_git_home: "{{ COMMON_APP_DIR }}/{{ ecommerce_service_name }}"
+ECOMMERCE_STATIC_ROOT: "{{ COMMON_DATA_DIR }}/{{ ecommerce_service_name }}/staticfiles"
+ECOMMERCE_THEME_DIR: "{{ COMMON_DATA_DIR }}/{{ ecommerce_service_name }}"
 ECOMMERCE_THEME_VERSION: 'koa-rg'
 ECOMMERCE_THEMES_REPOS:
   - PROTOCOL: 'ssh'

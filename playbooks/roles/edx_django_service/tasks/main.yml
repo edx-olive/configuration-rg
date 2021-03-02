@@ -235,12 +235,6 @@
   environment: "{{ edx_django_service_environment }}"
   with_items: '{{ edx_django_service_cronjob_auto }}'
   when: edx_django_service_cronjob_auto is defined and edx_django_service_cronjob_auto
-  run_once: yes
-  tags:
-    - migrate
-    - migrate:db
-    - migrate:post
-
 
 - name: insert service cronjobs
   cron:
@@ -256,11 +250,6 @@
   environment: "{{ edx_django_service_environment }}"
   with_items: '{{ edx_django_service_cronjob_auto }}'
   when: edx_django_service_cronjob_auto is defined and edx_django_service_cronjob_auto
-  run_once: yes
-  tags:
-    - migrate
-    - migrate:db
-    - migrate:post
 
 - name: ensure log files exist for tailing
   file:
