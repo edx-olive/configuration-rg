@@ -170,14 +170,27 @@ ECOMMERCE_EDX_DRF_EXTENSIONS:
 # Theming
 ECOMMERCE_PLATFORM_NAME: 'Your Platform Name Here'
 ECOMMERCE_THEME_SCSS: 'sass/themes/default.scss'
-ECOMMERCE_COMPREHENSIVE_THEME_DIRS:
-  - '{{ THEMES_CODE_DIR }}/{{ ecommerce_service_name }}'
-  - '{{ COMMON_APP_DIR }}/{{ ecommerce_service_name }}/{{ ecommerce_service_name }}/ecommerce/themes'
-
 ECOMMERCE_ENABLE_COMPREHENSIVE_THEMING: false
-ECOMMERCE_DEFAULT_SITE_THEME: !!null
 ECOMMERCE_STATICFILES_STORAGE: 'ecommerce.theming.storage.ThemeStorage'
-ECOMMERCE_STATIC_ROOT: '/edx/var/ecommerce/theme'
+
+ECOMMERCE_DEFAULT_SITE_THEME: "theme"
+ECOMMERCE_COMPREHENSIVE_THEME_DIRS:
+  - "{{ ECOMMERCE_THEME_DIR }}"
+
+ecommerce_git_home: /edx/app/ecommerce
+ECOMMERCE_STATIC_ROOT: /edx/var/ecommerce/staticfiles
+ECOMMERCE_THEME_DIR: "{{ COMMON_DATA_DIR }}/ecommerce"
+ECOMMERCE_THEME_VERSION: 'koa-rg'
+ECOMMERCE_THEMES_REPOS:
+  - PROTOCOL: 'ssh'
+    DOMAIN: "gitlab.raccoongang.com"
+    PATH: 'edx'
+    REPO: 'ecommerce-theme.git'
+    VERSION: "{{ ECOMMERCE_THEME_VERSION }}"
+    DESTINATION: "{{ ECOMMERCE_THEME_DIR }}/{{ ECOMMERCE_DEFAULT_SITE_THEME }}"
+    SSH_KEY: "{{ RG_COMMON_GIT_IDENTITY }}"
+
+
 # Celery
 ECOMMERCE_BROKER_USERNAME: ''
 ECOMMERCE_BROKER_PASSWORD: 'celery'
