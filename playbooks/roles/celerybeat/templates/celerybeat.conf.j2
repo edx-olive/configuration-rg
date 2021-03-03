@@ -1,5 +1,5 @@
 [program:celerybeat]
-environment={% if COMMON_ENABLE_NEWRELIC_APP %}NEW_RELIC_APP_NAME={{ celery_beat_service_name }},NEW_RELIC_LICENSE_KEY={{ NEWRELIC_LICENSE_KEY }},{% endif -%}LOGLEVEL=info,DJANGO_SETTINGS_MODULE={{ COMMON_EDXAPP_SETTINGS }},PYTHONPATH={{ COMMON_APP_DIR }}/edxapp/edx-platform,SERVICE_VARIANT={{ EDXAPP_CELERY_BEAT.service_variant }},LMS_CFG={{ COMMON_CFG_DIR }}/lms.yml,REVISION_CFG={{ COMMON_CFG_DIR }}/revisions.yml
+environment={% if COMMON_ENABLE_NEWRELIC_APP %}NEW_RELIC_APP_NAME={{ celery_beat_service_name }},NEW_RELIC_LICENSE_KEY={{ NEWRELIC_LICENSE_KEY }},{% endif -%}LOGLEVEL=info,DJANGO_SETTINGS_MODULE=lms.envs.production,PYTHONPATH={{ COMMON_APP_DIR }}/edxapp/edx-platform,SERVICE_VARIANT={{ EDXAPP_CELERY_BEAT.service_variant }},LMS_CFG={{ COMMON_CFG_DIR }}/lms.yml,REVISION_CFG={{ COMMON_CFG_DIR }}/revisions.yml
 user={{ common_web_user }}
 directory={{ COMMON_APP_DIR }}/edxapp/edx-platform
 stdout_logfile={{ supervisor_log_dir }}/%(program_name)s-stdout.log
