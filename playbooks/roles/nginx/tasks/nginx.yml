@@ -150,14 +150,13 @@
   with_dict: "{{ nginx_redirects }}"
   notify: reload nginx
 
-- name: Create NGINX server templates
-  template:
-    src: "{{ NGINX_SERVER_HTML_FILES_TEMPLATE }}"
-    dest: "{{ nginx_server_static_dir }}/{{ item.file }}"
+- name: Copy NGINX maintenance page
+  copy:
+    src: "{{ NGINX_SERVER_HTML_MAINTENANCE_DIR }}/"
+    dest: "{{ nginx_server_static_dir }}"
     owner: root
     group: "{{ common_web_user }}"
     mode: "0640"
-  with_items: "{{ NGINX_SERVER_HTML_FILES }}"
 
 - name: Copy static files
   copy:
