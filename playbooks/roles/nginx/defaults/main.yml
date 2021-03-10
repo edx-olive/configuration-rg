@@ -225,7 +225,7 @@ le_packages:
     - augeas-tools
     - libssl-dev
     - dialog
-    - python-virtualenv
+    - python3-virtualenv
     - libssl1.0.0
 
 LETSENCRYPT_ADDITIONAL_DOMAIN: []
