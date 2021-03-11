@@ -326,7 +326,7 @@
     state: directory
     owner: "{{ item.owner }}"
     group: "{{ common_web_group }}"
-    mode: "0755"
+    mode: "0775"
   with_items:
     - dir: "{{ edx_django_service_data_dir }}"
       owner: "{{ edx_django_service_user }}"
