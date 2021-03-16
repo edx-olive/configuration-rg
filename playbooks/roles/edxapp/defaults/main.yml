@@ -964,7 +964,8 @@ ECOMMERCE_SERVICE_USER_NAME: "ecommerce_worker"
 # Configuration needed for LMS to communicate with the Credentials service
 CREDENTIALS_SERVICE_USER_EMAIL: "credentials_worker@example.com"
 CREDENTIALS_SERVICE_USER_NAME: "credentials_worker"
-
+CREDENTIALS_SERVICE_USERNAME: "{{ EDXAPP_CREDENTIALS_SERVICE_USERNAME }}"
+EDXAPP_CREDENTIALS_SERVICE_USERNAME: "credentials_worker"
 # Configuration needed for LMS to communicate with the Insights service
 INSIGHTS_SERVICE_USER_EMAIL: "insights_worker@example.com"
 INSIGHTS_SERVICE_USER_NAME: "insights_worker"
