@@ -1,0 +1,20 @@
+# {{ ansible_managed }}
+
+[Unit]
+Description=memcached daemon
+After=network.target
+Documentation=man:memcached(1)
+
+[Service]
+ExecStart=/usr/share/memcached/scripts/systemd-memcached-wrapper /etc/memcached.conf
+PrivateTmp=true
+ProtectSystem=full
+NoNewPrivileges=true
+PrivateDevices=true
+CapabilityBoundingSet=CAP_SETGID CAP_SETUID CAP_SYS_RESOURCE
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+PIDFile=/run/memcached/{{ MEMCACHE_SERVICE_NAME }}.pid
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
