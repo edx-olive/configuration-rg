@@ -5,11 +5,11 @@ export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 
-MONGO_USER="{{ MONGO_ADMIN_USER | default(admin)  }}"
+MONGO_USER="{{ MONGO_ADMIN_USER | default('admin')  }}"
 MONGO_PASSWORD="{{ MONGO_ADMIN_PASSWORD }}"
-MONGO_HOSTS="{{ EDXAPP_MONGO_HOSTS | default(localhost) }}"
-DATABASE_NAME="{{ EDXAPP_MONGO_DB_NAME | default(edxapp) }}"
-MONGO_PORT="{{ EDXAPP_MONGO_PORT | default(27017) }}"
+MONGO_HOSTS="{{ EDXAPP_MONGO_HOSTS | default('localhost') }}"
+DATABASE_NAME="{{ EDXAPP_MONGO_DB_NAME | default('edxapp') }}"
+MONGO_PORT="{{ EDXAPP_MONGO_PORT | default('27017') }}"
 
 # Log to console and to file
 LOG_LOCATION={{mongopruner_service_log_dir}}
