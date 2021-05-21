@@ -39,5 +39,9 @@ edx_backup_duplicity_profiles:
     mongo_authdb: 'admin'
     mongo_host: "{{ EDXAPP_MONGO_HOSTS | default('127.0.0.1') }}"
 
+  - name: 'media'
+    type: 'file'
+    source: '/edx/var/edxapp/media/'
+
 # TODO to add AWS snapshots
 # TODO to add Azure Recovery Vault
