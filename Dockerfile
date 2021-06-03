@@ -5,6 +5,7 @@ RUN pip install ansible \
     PyYAML \
     zabbix-api \
     mysqlclient \
+    requests \
     && rm -rf ~/.cache
 
 RUN adduser --system --home /home/ansible --disabled-password  --group ansible
