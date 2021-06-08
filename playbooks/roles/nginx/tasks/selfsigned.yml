@@ -7,12 +7,12 @@
 
 - name: upload raccoongang selfsigned root sertificate and key
   copy:
-    src: "files/{{ item }}"
-    dest: "{{ nginx_ssl_selfsigned_path }}/{{ item }}"
+    src: "{{ item }}"
+    dest: "{{ nginx_ssl_selfsigned_path }}/{{ item | basename }}"
     mode: 0600
   with_items:
-    - "rg_selfsigned_root.crt"
-    - "rg_selfsigned_root.key"
+    - "{{ nginx_ssl_selfsigned_ca }}"
+    - "{{ nginx_ssl_selfsigned_cakey }}"
 
 - name: create selfsigned extentions file
   template:
@@ -20,13 +20,41 @@
     dest: "{{ nginx_ssl_selfsigned_path }}/selfsigned.ext"
 
 - name: create key for selfsigned
-  shell: "openssl genrsa -out {{ nginx_ssl_selfsigned_path }}/selfsigned.key 2048 ; chmod og-wrx {{ nginx_ssl_selfsigned_path }}/selfsigned.key"
+  shell: >
+    openssl genrsa -out {{ nginx_ssl_selfsigned_path }}/selfsigned.key 2048 ;
+    chmod og-wrx {{ nginx_ssl_selfsigned_path }}/selfsigned.key
 
 - name: create csr
-  shell: "openssl req -new -sha256 -key {{ nginx_ssl_selfsigned_path }}/selfsigned.key -subj '/C=US/ST=FL/O=SelfSigned, Inc./CN={{ EDXAPP_SITE_NAME }}' -out {{ nginx_ssl_selfsigned_path }}/selfsigned.scr"
+  command: >
+    openssl req -new -sha256 -key {{ nginx_ssl_selfsigned_path }}/selfsigned.key
+    -subj '/C=US/ST=FL/O=SelfSigned, Inc./CN={{ EDXAPP_SITE_NAME }}'
+    -out {{ nginx_ssl_selfsigned_path }}/selfsigned.scr
 
 - name: generate selfsigned cert
-  command: "openssl x509 -req -in {{ nginx_ssl_selfsigned_path }}/selfsigned.scr -CA {{ nginx_ssl_selfsigned_path }}/rg_selfsigned_root.crt -CAkey {{ nginx_ssl_selfsigned_path }}/rg_selfsigned_root.key -CAcreateserial -extfile {{ nginx_ssl_selfsigned_path }}/selfsigned.ext -out {{ nginx_ssl_selfsigned_path }}/selfsigned.crt -days 3650 -sha256"
+  command: >
+    openssl x509 -req -in {{ nginx_ssl_selfsigned_path }}/selfsigned.scr
+    -CA {{ nginx_ssl_selfsigned_path }}/{{ nginx_ssl_selfsigned_ca | basename }}
+    -CAkey {{ nginx_ssl_selfsigned_path }}/{{ nginx_ssl_selfsigned_cakey | basename }}
+    -CAcreateserial
+    -extfile {{ nginx_ssl_selfsigned_path }}/selfsigned.ext
+    -out {{ nginx_ssl_selfsigned_path }}/selfsigned.crt
+    -days {{ nginx_ssl_selfsigned_days }}
+    -sha256
+
+- name: merge cert with CA cert
+  shell: "cat {{ nginx_ssl_selfsigned_path }}/{{ nginx_ssl_selfsigned_ca | basename }} >> {{ nginx_ssl_selfsigned_path }}/selfsigned.crt"
+
+- name: add CA cert to Ubuntu's cert chain
+  copy:
+    src: "{{ nginx_ssl_selfsigned_path }}/{{ nginx_ssl_selfsigned_ca | basename }}"
+    dest: "/usr/local/share/ca-certificates/selfsigned_ca_{{ nginx_ssl_selfsigned_ca | basename }}.crt"
+    remote_src: True
+    mode: 0644
+  register: add_ss_ca
+
+- name: update-ca-certificates
+  command: update-ca-certificates
+  when: add_ss_ca is changed
 
 - name: remove extra files
   file:
@@ -35,9 +63,8 @@
   with_items:
     - "{{ nginx_ssl_selfsigned_path }}/selfsigned.ext"
     - "{{ nginx_ssl_selfsigned_path }}/selfsigned.scr"
-    - "{{ nginx_ssl_selfsigned_path }}/rg_selfsigned_root.crt"
-    - "{{ nginx_ssl_selfsigned_path }}/rg_selfsigned_root.key"
-    - "{{ nginx_ssl_selfsigned_path }}/rg_selfsigned_root.srl"
+    - "{{ nginx_ssl_selfsigned_path }}/{{ nginx_ssl_selfsigned_ca | basename }}"
+    - "{{ nginx_ssl_selfsigned_path }}/{{ nginx_ssl_selfsigned_cakey | basename }}"
 
 - name: set facts for certs paths
   set_fact:

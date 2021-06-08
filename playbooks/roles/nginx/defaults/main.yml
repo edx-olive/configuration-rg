@@ -213,8 +213,12 @@ raccoongang_ssl_src_path: ~/vault/roles/nginx
 raccoongang_ssl_crt: ''
 raccoongang_ssl_key: ''
 
-nginx_ssl_selfsigned: no
+nginx_ssl_selfsigned: False
+nginx_ssl_selfsigned_days: 3650
+nginx_ssl_selfsigned_addl_dns: []
 nginx_ssl_selfsigned_path: /etc/nginx/ssl
+nginx_ssl_selfsigned_ca: "files/rg_selfsigned_root.crt"
+nginx_ssl_selfsigned_cakey: "files/rg_selfsigned_root.key"
 
 nginx_default_conf_path: /etc/nginx/conf.d/default.conf
 nginx_default_conf_delete: yes
