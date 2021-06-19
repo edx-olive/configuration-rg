@@ -184,7 +184,7 @@
         owner: "root"
         group: "root"
         mode: 0600
-  when: use_raccoongang_ssl or use_letsencrypt
+  when: use_raccoongang_ssl or use_letsencrypt or nginx_ssl_selfsigned
 
 - name: test nginx config
   command: "/usr/sbin/nginx -t"
