@@ -16,6 +16,8 @@ GAMMA_USER: gamma
 
 GAMMA_EDX_LMS_BASE_URL: "{{ EDXAPP_LMS_ROOT_URL | default('http://localhost:8000') }}"
 GAMMA_EDX_API_KEY: "{{ EDXAPP_EDX_API_KEY | default('PUT_YOUR_API_KEY_HERE') }}"
+GAMMA_EDX_NOTIFICATION_API_SUFFIX: "notifications/api/v0/send-notification/"
+GAMMA_EDX_NOTIFICATION_ENABLED: False
 
 GAMMA_DEBUG: False
 
