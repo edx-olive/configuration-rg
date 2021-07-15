@@ -45,6 +45,7 @@ le_packages:
     - dialog 
     - python-virtualenv
     - libssl1.0.0
+    - snapd
 
 LETSENCRYPT_ADDITIONAL_DOMAIN: []
 LETSENCRYPT_DOMAIN_STING: []

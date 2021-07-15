@@ -26,11 +26,8 @@
     owner: www-data
     group: www-data
 
-- name: Installing certbot
-  get_url:
-    url: https://dl.eff.org/certbot-auto
-    dest: /usr/local/bin/certbot-auto
-    mode: 0755
+- name: Installing certbot via snap
+  command: snap install --classic certbot
 
 - name: Performing post-installation setup
   command: /usr/local/bin/certbot-auto --non-interactive --text --os-packages-only
@@ -52,7 +49,7 @@
   when: not nginx_edx_config
 
 - name: Requesting for LMS, CMS and LETSENCRYPT_ADDITIONAL_DOMAIN certificates
-  command: /usr/local/bin/certbot-auto certonly --agree-tos --non-interactive --text --rsa-key-size 2048 --webroot -w /var/www/letsencrypt -d {{ LETSENCRYPT_ALL_DOMAIN|join(' -d ') }}  --register-unsafely-without-email --force-renewal
+  command: certbot certonly --agree-tos --non-interactive --text --rsa-key-size 2048 --webroot -w /var/www/letsencrypt -d {{ LETSENCRYPT_ALL_DOMAIN|join(' -d ') }}  --register-unsafely-without-email --force-renewal
   when: le_cert_exists.stat.islnk is not defined
 
 - name: Create certbot log directory
@@ -74,4 +71,4 @@
     minute: "1"
     hour: "1"
     month: "*"
-    job: '/usr/local/bin/certbot-auto renew --webroot -w {{ letsencrypt_webroot }} --post-hook "service nginx restart" >> /var/log/letsencrypt/crontab.log 2>&1'
+    job: 'certbot renew --webroot -w {{ letsencrypt_webroot }} --post-hook "service nginx restart" >> /var/log/letsencrypt/crontab.log 2>&1'
