@@ -1,7 +1,10 @@
 ---
-zabbix_version_latest: "4.4"
+zabbix_version_latest: "4.5"
 zabbix_version:
   Ubuntu:
+    focal:
+      version: "{{ zabbix_version_latest }}"
+      repo_key: "DF517F33E709712C"
     bionic:
       version: "{{ zabbix_version_latest }}"
       repo_key: "DF517F33E709712C"
@@ -26,8 +29,8 @@ zabbix_version:
 
 zabbix_requirements:
   Ubuntu:
-    - python-pip
-    - python-virtualenv
+    - python3-pip
+    - python3-virtualenv
     - zabbix-agent
     - libmysqlclient-dev
   CentOS:
@@ -73,3 +76,7 @@ zabbix_agent_memcached_port: 11211
 zabbix_agent_rabbitmq_host: "localhost"
 zabbix_agent_rabbitmq_user: "guest"
 zabbix_agent_rabbitmq_password: "guest"
+
+zabbix_agent_redis_host: "localhost"
+zabbix_agent_redis_port: 6379
+zabbix_agent_redis_password: ""
