@@ -26,32 +26,41 @@ zabbix_support_conf:
       - "Client Prod on support"
     templates:
       - "Active Template OS Linux"
+      - "Active Ubuntu reboot required"
+      - "Active Template App APT Updates"
       - "Template App HTTPS Service"
       - "Active Template App EDX AD"
       - "Nginx connections"
+      - "Template NMAP open ports"
   Strong:
     groups:
       - "Client Prod on support"
     templates:
       - "Active Template OS Linux"
+      - "Active Ubuntu reboot required"
+      - "Active Template App APT Updates"
       - "Template App HTTPS Service"
       - "Active Template App EDX AD"
       - "Active Template App Elasticsearch node"
       - "Active Template App Memcached"
       - "Active Template App MongoDB"
       - "Active Template App MySQL"
-      - "Active Template App RabbitMQ"
+      - "Active Template App Redis"
       - "Nginx connections"
+      - "Template NMAP open ports"
   VIP:
     groups:
       - "Client VIP Support"
     templates:
       - "Active Template OS Linux"
+      - "Active Ubuntu reboot required"
+      - "Active Template App APT Updates"
       - "Template App HTTPS Service"
       - "Active Template App EDX AD"
       - "Active Template App Elasticsearch node"
       - "Active Template App Memcached"
       - "Active Template App MongoDB"
       - "Active Template App MySQL"
-      - "Active Template App RabbitMQ"
+      - "Active Template App Redis"
       - "Nginx connections"
+      - "Template NMAP open ports"

@@ -3,7 +3,7 @@
 
 from pymongo import MongoClient,errors
 from sys import argv
-import ConfigParser
+import configparser
 import os
 
 user = 'admin'
@@ -14,7 +14,7 @@ port = 27017
 replica_name = ''
 use_ssl = False
 
-config = ConfigParser.SafeConfigParser( { 'host': host, 'port': str(port), 'user': user, 'password': password, 'database': database, 'replica_name': replica_name, 'use_ssl': use_ssl} )
+config = configparser.ConfigParser( { 'host': host, 'port': str(port), 'user': user, 'password': password, 'database': database, 'replica_name': replica_name, 'use_ssl': use_ssl} )
 if config.read(os.path.dirname(os.path.realpath(__file__)) + '/scripts.cfg'):
 
     user = config.get('mongo', 'user')
@@ -39,10 +39,10 @@ def responder(array,item):
         responder_array = db.command("serverStatus")[str(array)]
         return(responder_array[str(item)])
         MongoClient.close()
-    except errors.ConnectionFailure, e:
+    except errors.ConnectionFailure as e:
         print("Failed connect to server. Refused.\n")
         exit(255)
-    except errors.NetworkTimeout, e:
+    except errors.NetworkTimeout as e:
         print("Failet connect to server. Timeout.\n")
         exit(255)
 

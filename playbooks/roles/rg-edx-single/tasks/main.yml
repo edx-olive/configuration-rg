@@ -21,5 +21,6 @@
 - include: edx-backup-duplicity.yml
 
 - include: edx-zabbix-single.yml
+  tags: [ "zabbix" ]
 
 - include: edx-awx-stop-update.yml
