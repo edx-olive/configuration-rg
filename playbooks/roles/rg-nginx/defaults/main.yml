@@ -69,3 +69,5 @@ nginx_default_conf_path: /etc/nginx/conf.d/default.conf
 nginx_default_conf_delete: yes
 
 ssl_trusted_certificate_path: /etc/ssl/certs/ca-certificates.crt
+
+NGINX_FORWARDED_FOR_BEHIND_PROXY: False
