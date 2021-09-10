@@ -206,7 +206,7 @@ discovery_cronjob_auto:
 
       if test -x {{ COMMON_BIN_DIR }}/python.discovery ; then
         sudo -Eu discovery {{ COMMON_APP_DIR }}/{{ discovery_service_name }}/venvs/discovery/bin/python {{ COMMON_APP_DIR }}/{{ discovery_service_name }}/discovery/manage.py refresh_course_metadata --settings=course_discovery.settings.production
-        sudo -Eu discovery {{ COMMON_APP_DIR }}/{{ discovery_service_name }}/venvs/discovery/bin/python {{ COMMON_APP_DIR }}/{{ discovery_service_name }}/discovery/manage.py update_index --disable-change-limit       --settings=course_discovery.settings.production >
+        sudo -Eu discovery {{ COMMON_APP_DIR }}/{{ discovery_service_name }}/venvs/discovery/bin/python {{ COMMON_APP_DIR }}/{{ discovery_service_name }}/discovery/manage.py update_index --disable-change-limit --settings=course_discovery.settings.production
         sudo -Eu discovery {{ COMMON_APP_DIR }}/{{ discovery_service_name }}/venvs/discovery/bin/python {{ COMMON_APP_DIR }}/{{ discovery_service_name }}/discovery/manage.py remove_unused_indexes --settings=course_discovery.settings.production
       else
         echo "discovery service not found" >&2
