@@ -4,7 +4,7 @@
 [program:{{ analytics_log_watcher_service_name }}]
 
 environment=DJANGO_SETTINGS_MODULE=lms.envs.{{ COMMON_EDXAPP_SETTINGS }},SERVICE_VARIANT=lms,LMS_CFG={{ COMMON_CFG_DIR }}/lms.yml,REVISION_CFG={{ COMMON_CFG_DIR }}/revisions.yml
-command={{ edxapp_venv_bin }}/python {{ edxapp_venv_dir }}/src/rg-instructor-analytics-log-collector/run_log_watcher.py --sleep_time {{ analytics_log_watcher_sleep_time }} --tracking_log_dir {{ tracking_directory }}
+command={{ edxapp_venv_bin }}/python {{ edxapp_venv_dir }}/src/rg-instructor-analytics-log-collector/run_log_watcher.py --sleep_time {{ analytics_log_watcher_sleep_time }} --tracking_log_dir {{ tracking_directory }} --delete-logs
 user={{ common_web_user }}
 stdout_logfile={{ supervisor_log_dir }}/%(program_name)s-stdout.log
 stderr_logfile={{ supervisor_log_dir }}/%(program_name)s-stderr.log

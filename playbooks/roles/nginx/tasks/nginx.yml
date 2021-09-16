@@ -223,6 +223,14 @@
     group: root
     mode: 0644
 
+- name: Set up hard and soft limits
+  template:
+    src: "limits.j2"
+    dest: "/etc/security/limits.d/nginx"
+    owner: root
+    group: root
+    mode: 0644
+
 - name: Create Diffie-Hellman parameters to prevent weak key exchange
   command: openssl dhparam -out "{{ NGINX_DH_PARAMS_PATH | basename }}" {{ NGINX_DH_KEYSIZE }}
   args:
