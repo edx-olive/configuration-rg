@@ -1842,3 +1842,4 @@ edxapp_staticfiles_storage_overrides: !!null
 # SiteConfiguration instance.
 
 EDXAPP_SITE_CONFIGURATION: {}
+EDXAPP_SITE_CONFIGURATION_DISCOVERY: "{{ DISCOVERY_EDXAPP_SITE_CONFIGURATION if COMMON_ENABLE_DISCOVERY else {} }}"
