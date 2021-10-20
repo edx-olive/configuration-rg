@@ -31,7 +31,7 @@
         site_identifier: "--site-id {{ default_site_id.stdout }}"
       when: item.site_id is not defined and item.domain is not defined
 
-    - name: Run create_or_update_site_configuration
+    - name: Run create_or_update_site_configuration for {{ site_identifier }}
       shell: |
         . {{ edxapp_app_dir }}/edxapp_env
         {{ edxapp_venv_bin }}/python {{ edxapp_code_dir }}/manage.py lms create_or_update_site_configuration -f /tmp/site_configuration.json --enabled {{ site_identifier }}
