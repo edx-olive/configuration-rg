@@ -1,1 +1,13 @@
 registry={{ COMMON_NPM_MIRROR_URL }}
+
+#
+# Example of private GitLab package repository
+# documentation - https://gitlab.raccoongang.com/help/user/packages/npm_registry/index.md
+#
+# EDXAPP_NPMRC_EXTRA: |
+#   @duck:registry=https://gitlab.raccoongang.com/api/v4/projects/1196/packages/npm/
+#   //gitlab.raccoongang.com/api/v4/projects/1196/packages/npm/:_authToken="DEPLOY_TOKEN"
+#
+{% if EDXAPP_NPMRC_EXTRA | default(None, true) %}
+{{ EDXAPP_NPMRC_EXTRA }}
+{% endif %}
