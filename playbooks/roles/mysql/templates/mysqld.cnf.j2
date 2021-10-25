@@ -34,3 +34,6 @@ innodb_flush_method = O_DIRECT
 skip-name-resolve = 1
 tmp_table_size = 256M
 max_heap_table_size = 256M
+{% if MYSQL_MYSQLD_CONF_EXTRA | default(None, true) %}
+{{ MYSQL_MYSQLD_CONF_EXTRA }}
+{% endif %}
