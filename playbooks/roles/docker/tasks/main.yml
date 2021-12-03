@@ -19,7 +19,7 @@
     - install
     - docker
 
-- include: install.yum.yml
+- include_tasks: install.yum.yml
   when: ansible_os_family == "RedHat"
   tags:
     - install
