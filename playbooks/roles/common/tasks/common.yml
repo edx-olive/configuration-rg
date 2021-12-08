@@ -51,7 +51,6 @@
     repo: "{{ common_git_ppa }}"
   when: ansible_distribution in common_debian_variants
 
-
 # Ensure that we can install old software if need be.
 - name: Add edX PPA apt key
   apt_key:
@@ -60,14 +59,13 @@
     state: "present"
   when: >
     ansible_distribution in common_debian_variants and
-    ansible_distribution_release != 'bionic'
+    (ansible_distribution_release != 'bionic' and ansible_distribution_release != 'focal')
 
 - name: Update expired apt keys
   shell: apt-key adv --recv-keys --keyserver {{ COMMON_EDX_PPA_KEY_SERVER }} {{ COMMON_EDX_PPA_KEY_ID }}
   when: >
     ansible_distribution in common_debian_variants and
-    ansible_distribution_release != 'bionic'
-
+    (ansible_distribution_release != 'bionic' and ansible_distribution_release != 'focal')
 
 - name: Add custom edX PPA
   # Ensure that we get the latest version of python 2.7
@@ -77,6 +75,14 @@
   when: >
     ansible_distribution in common_debian_variants and
     (ansible_distribution_release != 'bionic' and ansible_distribution_release != 'focal')
+
+- name: Remove custom edX PPA for bionic and focal
+  apt_repository:
+    repo: "{{ COMMON_EDX_PPA }}"
+    state: absent
+  when: >
+    ansible_distribution in common_debian_variants and
+    (ansible_distribution_release == 'bionic' or ansible_distribution_release == 'focal')
 
 - name: Install role-independent useful system packages
   # do this before log dir setup; rsyslog package guarantees syslog user present
@@ -96,7 +102,8 @@
   when: >
     ansible_distribution in common_debian_variants and
     ansible_distribution_release in old_python_ppa_releases and
-    ansible_distribution_release != 'bionic'
+    ansible_distribution_release != 'bionic' and
+    ansible_distribution_release != 'focal'
 
 - name: Install role-independent useful system packages
   yum:
