@@ -29,6 +29,7 @@
 
 - import_role:
     name: redis
+  when: EDXAPP_REDIS_HOSTNAME == 'localhost' or EDXAPP_REDIS_HOSTNAME == '127.0.0.1'
 
 #- import_role:
 #    name: rabbitmq
