@@ -28,6 +28,8 @@
    - role: splunkforwarder
      when: COMMON_ENABLE_SPLUNKFORWARDER
    - role: newrelic_infrastructure
+     vars: 
+        NEWRELIC_INFRASTRUCTURE_LOG_FILES: "{{ EDXAPP_NEWRELIC_INFRASTRUCTURE_LOG_FILES }}"
      when: COMMON_ENABLE_NEWRELIC_INFRASTRUCTURE
    - role: minos
      when: COMMON_ENABLE_MINOS
