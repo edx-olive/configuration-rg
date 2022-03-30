@@ -18,6 +18,8 @@
     - role: splunkforwarder
       when: COMMON_ENABLE_SPLUNKFORWARDER
     - role: newrelic_infrastructure
+      vars: 
+        NEWRELIC_INFRASTRUCTURE_LOG_FILES: "{{ FORUM_NEWRELIC_INFRASTRUCTURE_LOG_FILES }}"
       when: COMMON_ENABLE_NEWRELIC_INFRASTRUCTURE
     - role: datadog-uninstall
       when: not COMMON_ENABLE_DATADOG
