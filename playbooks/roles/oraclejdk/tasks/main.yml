@@ -22,6 +22,7 @@
     headers: 
       Cookie: oraclelicense=a
     dest: "/var/tmp/{{ oraclejdk_file }}"
+    timeout: 180
 
 - name: Create jvm dir
   file:
