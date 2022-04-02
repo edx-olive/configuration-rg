@@ -57,6 +57,9 @@
     name: edxapp
 
 - import_role:
+    name: aws
+
+- import_role:
     name: enterprise_catalog
   when: COMMON_ENABLE_ENTERPRISE
 
