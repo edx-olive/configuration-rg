@@ -147,3 +147,7 @@
 - import_role:
     name: datadog-uninstall
   when: not COMMON_ENABLE_DATADOG
+
+- import_role:
+    name: newrelic_infrastructure
+  when: COMMON_ENABLE_NEWRELIC_INFRASTRUCTURE
