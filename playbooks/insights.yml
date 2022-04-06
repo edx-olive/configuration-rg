@@ -18,7 +18,7 @@
     - role: splunkforwarder
       when: COMMON_ENABLE_SPLUNKFORWARDER
     - role: newrelic_infrastructure
-      vars: 
+      vars:
         NEWRELIC_INFRASTRUCTURE_LOG_FILES: "{{ INSIGHT_NEWRELIC_INFRASTRUCTURE_LOG_FILES }}"
       when: COMMON_ENABLE_NEWRELIC_INFRASTRUCTURE
     - role: datadog-uninstall
@@ -26,4 +26,3 @@
     - role: hermes
       HERMES_TARGET_SERVICE: 'insights'
       when: INSIGHTS_HERMES_ENABLED
-

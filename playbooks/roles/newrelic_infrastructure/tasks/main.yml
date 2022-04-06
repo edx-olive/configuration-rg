@@ -121,20 +121,20 @@
     owner: root
     group: root
     mode: u=rwx,g=r,o=r
-  when: NEWRELIC_INFRASTRUCTURE_LOG_FILES is defined
+  when: EDXAPP_NEWRELIC_INFRASTRUCTURE_LOG_FILES is defined
 
 - name: Execute log script file on destination
   command: "sh /edx/bin/write_nr_log_files_config.sh '{{ NEWRELIC_INFRASTRUCTURE_LOG_FILES }}'"
-  when: NEWRELIC_INFRASTRUCTURE_LOG_FILES is defined
+  when: EDXAPP_NEWRELIC_INFRASTRUCTURE_LOG_FILES is defined
 
 - name: Restart the infrastructure agent if log file has been installed
   service:
     name: newrelic-infra
     state: restarted
-  when: NEWRELIC_INFRASTRUCTURE_LOG_FILES is defined
+  when: EDXAPP_NEWRELIC_INFRASTRUCTURE_LOG_FILES is defined
   tags:
     - install
-    - install:configuration 
+    - install:configuration
 
 # In Ubuntu>16.04, /etc/rc.local doesn't exist by default. Since this script isn't
 # used by the GoCD instance using Ubuntu 18.04, skip this task when running on Bionic.
