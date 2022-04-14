@@ -41,6 +41,14 @@
 #  become: True
 #  when: "'expired' in ppa_key_status.stdout"
 
+- name: Remove custom edX PPA for bionic and focal
+  apt_repository:
+    repo: "{{ COMMON_EDX_PPA }}"
+    state: absent
+  when: >
+    ansible_distribution in common_debian_variants and
+    (ansible_distribution_release == 'bionic' or ansible_distribution_release == 'focal')
+
 - name: Sending slack notification
   slack:
     token: "{{ slack_notification_token }}"
