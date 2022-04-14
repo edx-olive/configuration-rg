@@ -58,6 +58,7 @@
 
 - import_role:
     name: aws
+  when: cloud_provider is defined and cloud_provider == "aws"
 
 - import_role:
     name: enterprise_catalog
