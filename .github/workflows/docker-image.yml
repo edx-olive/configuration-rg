@@ -1,0 +1,23 @@
+name: Docker Image CI
+
+env:
+  ECR_REGISTRY: "359153448268.dkr.ecr.eu-west-1.amazonaws.com"
+
+on:
+  push:
+    branches: [ "master" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-20.04
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Login to ECR Registry
+      run: echo ${{ secrets.DOCKER_ECR_PASSWORD }} | docker login -u AWS --password-stdin $ECR_REGISTRY
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag ${ECR_REGISTRY}/configuration:${GITHUB_REF_NAME}
+    - name: Push the Docker image to the registry
+      run: docker push ${ECR_REGISTRY}/configuration:${GITHUB_REF_NAME}
